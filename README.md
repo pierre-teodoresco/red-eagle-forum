@@ -4,6 +4,6 @@
 A forum for real Red Eagles!
 
 ## Author
-* [**Eliot Colomb**]
-* [**Alexis Duval**]
-* [**Pierre Teodoresco**]
+* **Eliot Colomb**
+* **Alexis Duval**
+* **Pierre Teodoresco**
