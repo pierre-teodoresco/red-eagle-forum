@@ -9,8 +9,7 @@ A forum for real Red Eagles!
 * **Pierre Teodoresco**
 
 ## Build & Run
-After clonning the project, open two CLI inside the project root.
-
+After clonning the project, open two CLI inside the project root.\
 In the first terminal type these commands
 ```bash
 cd server
