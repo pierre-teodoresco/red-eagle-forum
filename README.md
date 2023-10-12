@@ -9,16 +9,16 @@ A forum for real Red Eagles!
 * **Pierre Teodoresco**
 
 ## Build & Run
-After clonning the project, open two CLI inside the project root.
+After cloning the project, open two CLIs at the project root.
 
-In the first terminal type these commands
+In the first terminal, type the following commands
 ```bash
 cd server
 npm install
 npm run dev
 ```
 
-And in the second one, type these ones
+And in the second terminal, type these commands
 ```bash
 cd client
 npm install
