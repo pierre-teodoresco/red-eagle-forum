@@ -9,9 +9,9 @@ import express from 'express'
 const app = express();
 const port = process.env.PORT;
 
-app.get('/', (req, res) => {
+app.get('/status', (req, res) => {
     res.send({
-        "message": "Hello, World!"
+        message: "Server is OK!"
     });
 });
 
