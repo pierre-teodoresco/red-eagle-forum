@@ -22,5 +22,5 @@ And in the second terminal, type these commands
 ```bash
 cd client
 npm install
-npm run serve
+npm run dev
 ```

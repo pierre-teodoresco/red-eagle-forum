@@ -11,6 +11,9 @@ import userController from './controllers/UserController.js';
 const app = express();
 const port = process.env.PORT;
 
+// Body parser
+app.use(express.json());
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
