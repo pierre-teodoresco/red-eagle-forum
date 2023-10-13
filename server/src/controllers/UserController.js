@@ -1,5 +1,5 @@
 // UserController.js
-import { addUser } from '../models/user.js';
+import { addUser } from '../models/User.js';
 
 const userController = {
     addUser: async (req, res) => {
