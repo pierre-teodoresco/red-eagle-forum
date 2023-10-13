@@ -26,8 +26,11 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-// Routes
-app.post('/user', userController.addUser);
+/* Routes */
+
+// User
+app.post('/user', userController.register);
+app.get('/user', userController.login);
 
 app.get('/status', (req, res) => {
     res.send({

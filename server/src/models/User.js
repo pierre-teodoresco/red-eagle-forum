@@ -2,17 +2,39 @@
 import mongoose from 'mongoose';
 
 const User = mongoose.model('User', {
-    name: String,
-    point: Number,
+    username: String,
+    password: String,
 });
 
-async function addUser(username) {
+/**
+ * @brief Register a new user
+ * @param {string} username 
+ * @param {string} password 
+ */
+async function register(username, password) {
     const newUser = new User({
-        name: username,
-        point: 0,
+        username,
+        password,
     });
 
     await newUser.save();
 }
 
-export { User, addUser };
+/**
+ * @brief Log in a user
+ * @param {string} username 
+ * @param {string} password 
+ * @returns {string || null} if found the logged user
+ */
+async function login(username, password) {
+    const user = await User.findOne({ username, password });
+    if (user) {
+        // User found, return user data
+        return user;
+    } else {
+        // User not found or password doesn't match
+        return null;
+    }
+}
+
+export { User, register, login };
