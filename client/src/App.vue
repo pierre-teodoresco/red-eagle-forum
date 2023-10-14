@@ -6,7 +6,7 @@
 </template>
 
 <script>
-export default {
-  // Component logic here
-};
+  export default {
+    // Component logic here
+  };
 </script>

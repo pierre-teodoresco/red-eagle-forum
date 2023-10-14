@@ -6,6 +6,8 @@ dotenv.config();
 
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
+
 import userController from './controllers/UserController.js';
 
 const app = express();
@@ -13,6 +15,7 @@ const port = process.env.PORT;
 
 // Body parser
 app.use(express.json());
+app.use(cors({ origin: process.env.FRONT_URI })); // Autorisez uniquement les requêtes depuis ce domaine
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
@@ -29,8 +32,8 @@ db.once('open', () => {
 /* Routes */
 
 // User
-app.post('/user', userController.register);
-app.get('/user', userController.login);
+app.post('/api/user', userController.register);
+app.get('/api/user', userController.login);
 
 app.get('/status', (req, res) => {
     res.send({
