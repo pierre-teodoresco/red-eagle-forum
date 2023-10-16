@@ -44,6 +44,9 @@ export default {
 
                 console.log('User registered successfully');
 
+                // Redirection vers la vue Home en cas de succès
+                this.$router.push('/');
+
             } catch (error) {
                 console.error('Error during registration:', error);
 
