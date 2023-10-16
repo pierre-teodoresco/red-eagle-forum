@@ -32,8 +32,8 @@ db.once('open', () => {
 /* Routes */
 
 // User
-app.post('/api/user', userController.register);
-app.get('/api/user', userController.login);
+app.post('/api/register', userController.register);
+app.get('/api/login', userController.login);
 
 app.get('/status', (req, res) => {
     res.send({

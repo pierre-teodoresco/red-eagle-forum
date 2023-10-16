@@ -23,10 +23,11 @@ const userController = {
         try {
             const username = req.query.username;
             const password = req.query.password;
-            const user = await login(username, password);
-            console.log(user);
 
-            if (!user) {
+            // Get user from database
+            const user = await login(username);
+
+            if (!user || user.password !== password) {
                 // Wrong username or password
                 res.status(401).json({ error: 'Invalid credentials' });
                 return;

@@ -26,8 +26,8 @@ async function register(username, password) {
  * @param {string} password 
  * @returns {string || null} if found the logged user
  */
-async function login(username, password) {
-    const user = await User.findOne({ username, password });
+async function login(username) {
+    const user = await User.findOne({ username });
     if (user) {
         // User found, return user data
         return user;
