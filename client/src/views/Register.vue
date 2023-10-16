@@ -27,6 +27,7 @@ export default {
         async registerUser() {
             console.log("register submit");
             try {
+                // Envoi de la requête POST au backend avec les données d'inscription
                 const response = await fetch('/api/user', {
                     method: 'POST',
                     headers: {
@@ -38,8 +39,11 @@ export default {
                     }),
                 });
 
+                // Vérification de la réussite de la requête
                 if (!response.ok) {
-                    throw new Error('Registration failed');
+                    // Tentative de récupération du message d'erreur depuis le corps de la réponse
+                    const responseData = await response.json();
+                    throw new Error(responseData.message || 'Registration failed');
                 }
 
                 console.log('User registered successfully');
@@ -51,7 +55,7 @@ export default {
                 console.error('Error during registration:', error);
 
             } finally {
-                // Reset form fields
+                // Réinitialisation des champs du formulaire
                 this.username = '';
                 this.password = '';
             }
@@ -59,4 +63,3 @@ export default {
     },
 };
 </script>
-
