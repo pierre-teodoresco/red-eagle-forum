@@ -24,7 +24,16 @@ const userController = {
             const username = req.query.username;
             const password = req.query.password;
             const user = await login(username, password);
-            res.status(200).json(user);
+            console.log(user);
+
+            if (!user) {
+                // Wrong username or password
+                res.status(401).json({ error: 'Invalid credentials' });
+                return;
+            } else {
+                // User found, return user data
+                res.status(200).json(user);
+            }
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
