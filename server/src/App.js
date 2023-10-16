@@ -15,7 +15,7 @@ const port = process.env.PORT;
 
 // Body parser
 app.use(express.json());
-app.use(cors({ origin: process.env.FRONT_URI })); // Autorisez uniquement les requêtes depuis ce domaine
+app.use(cors({ origin: process.env.FRONT_URL })); // Autorisez uniquement les requêtes depuis ce domaine
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
