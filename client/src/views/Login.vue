@@ -42,7 +42,7 @@
                     </div>
                 </div>
 
-                <div v-if="error" class="text-red-500 text-sm">
+                <div v-if="error" class="text-red-500 text-sm mt-2">
                     {{ error }}
                 </div>
 
