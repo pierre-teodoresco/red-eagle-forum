@@ -42,6 +42,10 @@
                     </div>
                 </div>
 
+                <div v-if="error" class="text-red-500 text-sm">
+                    {{ error }}
+                </div>
+
                 <div>
                     <button type="submit"
                         class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -75,8 +79,6 @@ export default {
     },
     methods: {
         async loginUser() {
-            console.log("login submit");
-
             try {
                 // Construction de l'URL avec les paramètres username et password
                 const uri = `/api/login?username=${this.username}&password=${this.password}`;
@@ -89,18 +91,27 @@ export default {
                     },
                 });
 
+                // Récupération des données de la réponse du backend
                 const responseData = await response.json();
 
                 // Vérification de la réussite de la requête
                 if (!response.ok) {
-                    // Tentative de récupération du message d'erreur depuis le corps de la réponse
-                    throw new Error(responseData.message || 'Login failed');
+                    // La requête a échoué
+                    
+                    if (response.status === 401) {
+                        // Code 401 Unauthorized : Les informations d'identification sont incorrectes
+                        throw new Error('Invalid username or password');
+                    } else if (response.status === 500) {
+                        // Code 500 Internal Server Error : Erreur du côté serveur
+                        throw new Error('Server error. Please try again later.');
+                    } else {
+                        // Autres erreurs non gérées
+                        throw new Error(responseData.message || 'Login failed');
+                    }
                 }
 
-                console.log('User logged successfully');
-
                 // Stocke l'utilisateur dans le store Vuex
-                this.$store.commit('setUser', responseData);
+                this.$store.dispatch('login', responseData);
 
                 // Redirection vers la vue Home en cas de succès
                 this.$router.push('/');
@@ -108,7 +119,7 @@ export default {
             } catch (error) {
                 console.error('Error during login:', error);
 
-                // Affichage du message d'erreur
+                // Affichage de l'erreur à l'utilisateur
                 this.error = error.message;
             } finally {
                 // Réinitialisation des champs du formulaire
