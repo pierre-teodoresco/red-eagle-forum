@@ -1,5 +1,5 @@
 // UserController.js
-import { register, login } from '../models/User.js';
+import User from '../models/User.js';
 
 const userController = {
     /**
@@ -9,7 +9,7 @@ const userController = {
         try {
             const username = req.body.username;
             const password = req.body.password;
-            await register(username, password);
+            await User.insert(username, password);
             res.status(200).json({ message: 'User added successfully' });
         } catch (error) {
             console.error(error);
@@ -21,18 +21,16 @@ const userController = {
      */
     login: async (req, res) => {
         try {
-            const username = req.query.username;
-            const password = req.query.password;
-
             // Get user from database
-            const user = await login(username);
+            const user = await User.getByUsername(req.query.username);
 
-            if (!user || user.password !== password) {
+            if (!user || user.password !== req.query.password) {
                 // Wrong username or password
                 res.status(401).json({ error: 'Invalid credentials' });
                 return;
             } else {
                 // User found, return user data
+                delete user.password; // Remove password from user object
                 res.status(200).json(user);
             }
         } catch (error) {

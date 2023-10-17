@@ -28,7 +28,7 @@
 
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <input id="remember_me" name="remember_me" type="checkbox"
+                        <input id="remember_me" name="remember_me" type="checkbox" v-model="rememberMe"
                             class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                         <label for="remember_me" class="ml-2 block text-sm text-gray-900">
                             Remember me
@@ -72,13 +72,15 @@
 export default {
     data() {
         return {
-            username: '',
-            password: '',
-            error: null, // Propriété pour stocker les erreurs
+            username: '',       // Nom d'utilisateur
+            password: '',       // Mot de passe de l'utilisateur
+            rememberMe: false,  // Indique si l'utilisateur souhaite rester connecté
+            error: null,        // Message d'erreur à afficher à l'utilisateur
         };
     },
     methods: {
         async loginUser() {
+            // Code à exécuter lorsque le formulaire est soumis
             try {
                 // Construction de l'URL avec les paramètres username et password
                 const uri = `/api/login?username=${this.username}&password=${this.password}`;
@@ -110,6 +112,14 @@ export default {
                     }
                 }
 
+                if (this.rememberMe) {
+                    // Stocke le username dans le localStorage
+                    localStorage.setItem('username', responseData.username);
+                } else {
+                    // Supprime le username du localStorage
+                    localStorage.removeItem('username');
+                }
+
                 // Stocke l'utilisateur dans le store Vuex
                 this.$store.dispatch('login', responseData);
 
@@ -127,6 +137,16 @@ export default {
                 this.password = '';
             }
         },
+    },
+    mounted() {
+        // Code à exécuter lorsque la page est chargée
+
+        // Récupérer le username stocké dans le localStorage
+        const storedUsername = localStorage.getItem('username');
+        if (storedUsername) {
+            // Définir le username dans le data de la vue
+            this.username = storedUsername;
+        }
     },
 };
 </script>
