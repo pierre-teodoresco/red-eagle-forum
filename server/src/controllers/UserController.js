@@ -30,8 +30,15 @@ const userController = {
                 return;
             } else {
                 // User found, return user data
-                delete user.password; // Remove password from user object
-                res.status(200).json(user);
+                
+                // Copy user object
+                const userToSend = { ...user.toObject() };
+
+                // Delete password from user object
+                delete userToSend.password;
+
+                // Send user data
+                res.status(200).json(userToSend);
             }
         } catch (error) {
             console.error(error);

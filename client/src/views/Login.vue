@@ -1,5 +1,4 @@
 <!-- src/views/Login.vue -->
-<!-- src/views/Login.vue -->
 <template>
     <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
@@ -72,20 +71,20 @@
 export default {
     data() {
         return {
-            username: '',       // Nom d'utilisateur
-            password: '',       // Mot de passe de l'utilisateur
-            rememberMe: false,  // Indique si l'utilisateur souhaite rester connecté
-            error: null,        // Message d'erreur à afficher à l'utilisateur
+            username: '',       // User's username
+            password: '',       // User's password
+            rememberMe: false,  // Indicates if the user wants to stay logged in
+            error: null,        // Error message to display to the user
         };
     },
     methods: {
         async loginUser() {
-            // Code à exécuter lorsque le formulaire est soumis
+            // Code to execute when the form is submitted
             try {
-                // Construction de l'URL avec les paramètres username et password
+                // Build the URL with username and password parameters
                 const uri = `/api/login?username=${this.username}&password=${this.password}`;
 
-                // Envoi de la requête GET au backend
+                // Send the GET request to the backend
                 const response = await fetch(uri, {
                     method: 'GET',
                     headers: {
@@ -93,58 +92,58 @@ export default {
                     },
                 });
 
-                // Récupération des données de la réponse du backend
+                // Get the data from the backend response
                 const responseData = await response.json();
 
-                // Vérification de la réussite de la requête
+                // Check if the request was successful
                 if (!response.ok) {
-                    // La requête a échoué
-                    
+                    // The request failed
+
                     if (response.status === 401) {
-                        // Code 401 Unauthorized : Les informations d'identification sont incorrectes
+                        // Code 401 Unauthorized: Incorrect login credentials
                         throw new Error('Invalid username or password');
                     } else if (response.status === 500) {
-                        // Code 500 Internal Server Error : Erreur du côté serveur
+                        // Code 500 Internal Server Error: Server-side error
                         throw new Error('Server error. Please try again later.');
                     } else {
-                        // Autres erreurs non gérées
+                        // Other unhandled errors
                         throw new Error(responseData.message || 'Login failed');
                     }
                 }
 
                 if (this.rememberMe) {
-                    // Stocke le username dans le localStorage
+                    // Store the username in localStorage
                     localStorage.setItem('username', responseData.username);
                 } else {
-                    // Supprime le username du localStorage
+                    // Remove the username from localStorage
                     localStorage.removeItem('username');
                 }
 
-                // Stocke l'utilisateur dans le store Vuex
+                // Store the user in the Vuex store
                 this.$store.dispatch('login', responseData);
 
-                // Redirection vers la vue Home en cas de succès
+                // Redirect to the Home view on success
                 this.$router.push('/');
 
             } catch (error) {
                 console.error('Error during login:', error);
 
-                // Affichage de l'erreur à l'utilisateur
+                // Display the error to the user
                 this.error = error.message;
             } finally {
-                // Réinitialisation des champs du formulaire
+                // Reset the form fields
                 this.username = '';
                 this.password = '';
             }
         },
     },
     mounted() {
-        // Code à exécuter lorsque la page est chargée
+        // Code to execute when the page is loaded
 
-        // Récupérer le username stocké dans le localStorage
+        // Retrieve the username stored in localStorage
         const storedUsername = localStorage.getItem('username');
         if (storedUsername) {
-            // Définir le username dans le data de la vue
+            // Set the username in the view's data
             this.username = storedUsername;
         }
     },

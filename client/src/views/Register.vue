@@ -51,15 +51,15 @@
 export default {
     data() {
         return {
-            username: '',
-            password: '',
+            username: '',   // User's username
+            password: '',   // User's password
         };
     },
     methods: {
         async registerUser() {
             console.log("register submit");
             try {
-                // Envoi de la requête POST au backend avec les données d'inscription
+                // Send the POST request with username and password to the backend
                 const response = await fetch('/api/register', {
                     method: 'POST',
                     headers: {
@@ -71,23 +71,21 @@ export default {
                     }),
                 });
 
-                // Vérification de la réussite de la requête
+                // Check if the request was successful
                 if (!response.ok) {
-                    // Tentative de récupération du message d'erreur depuis le corps de la réponse
+                    // Throw an error with the message from the backend
                     const responseData = await response.json();
                     throw new Error(responseData.message || 'Registration failed');
                 }
 
-                console.log('User registered successfully');
-
-                // Redirection vers la vue Home en cas de succès
+                // Use router.push to redirect to the home page
                 this.$router.push('/');
 
             } catch (error) {
                 console.error('Error during registration:', error);
 
             } finally {
-                // Réinitialisation des champs du formulaire
+                // Reset the form
                 this.username = '';
                 this.password = '';
             }
