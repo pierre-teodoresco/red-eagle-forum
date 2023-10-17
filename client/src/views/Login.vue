@@ -119,9 +119,6 @@ export default {
                     localStorage.removeItem('username');
                 }
 
-                // Store the user in the Vuex store
-                this.$store.dispatch('login', responseData);
-
                 // Redirect to the Home view on success
                 this.$router.push('/');
 

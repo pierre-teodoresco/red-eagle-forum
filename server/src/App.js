@@ -7,14 +7,28 @@ dotenv.config();
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import session from 'express-session';
 
 import userController from './controllers/UserController.js';
 
 const app = express();
 const port = process.env.PORT;
 
+// Session
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+    }
+}));
+
 // Body parser
 app.use(express.json());
+
+// CORS
 app.use(cors({ origin: process.env.FRONT_URL })); // Only accept requests from the front-end
 
 // Connect to MongoDB
@@ -34,6 +48,8 @@ db.once('open', () => {
 // User
 app.post('/api/register', userController.register);
 app.get('/api/login', userController.login);
+
+app.use(userController.isLoggedIn); 
 
 app.get('/status', (req, res) => {
     res.send({
