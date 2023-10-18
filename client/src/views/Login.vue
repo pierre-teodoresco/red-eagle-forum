@@ -69,7 +69,7 @@
 <!-- src/views/Login.vue -->
 <script>
 import Cookies from 'js-cookie';
-import Service from './service';
+import Service from '../services'
 
 export default {
     data() {
@@ -100,7 +100,6 @@ export default {
 
                 // Get the data from the backend response
                 const responseData = await response.json();
-                console.log('responseData:', responseData);
 
                 // Check if the request was successful
                 if (!response.ok) {

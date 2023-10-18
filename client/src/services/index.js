@@ -27,7 +27,7 @@ export default {
                     isValid: responseData.isValid,
                     user: responseData.user,
                 }
-            }   
+            }
         } catch (error) {
             console.error('Error checking token validity: ', error);
             throw error;
