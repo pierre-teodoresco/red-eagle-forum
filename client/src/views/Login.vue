@@ -68,6 +68,9 @@
 
 <!-- src/views/Login.vue -->
 <script>
+import Cookies from 'js-cookie';
+import Service from './service';
+
 export default {
     data() {
         return {
@@ -78,6 +81,9 @@ export default {
         };
     },
     methods: {
+        /**
+         * @brief Log in user + creates a session cookie
+         */
         async loginUser() {
             // Code to execute when the form is submitted
             try {
@@ -94,6 +100,7 @@ export default {
 
                 // Get the data from the backend response
                 const responseData = await response.json();
+                console.log('responseData:', responseData);
 
                 // Check if the request was successful
                 if (!response.ok) {
@@ -111,13 +118,8 @@ export default {
                     }
                 }
 
-                if (this.rememberMe) {
-                    // Store the username in localStorage
-                    localStorage.setItem('username', responseData.username);
-                } else {
-                    // Remove the username from localStorage
-                    localStorage.removeItem('username');
-                }
+                // Store session token in a cookie
+                Cookies.set('sessionToken', responseData.token, { expires: 1 });
 
                 // Redirect to the Home view on success
                 this.$router.push('/');
@@ -137,11 +139,24 @@ export default {
     mounted() {
         // Code to execute when the page is loaded
 
-        // Retrieve the username stored in localStorage
-        const storedUsername = localStorage.getItem('username');
-        if (storedUsername) {
-            // Set the username in the view's data
-            this.username = storedUsername;
+        // Check if the token is already stored in cookies
+        const sessionToken = Cookies.get('sessionToken');
+        if (sessionToken) {
+            // Check the validity of the token by sending a request to the server
+            Service.checkSessionTokenValidity(sessionToken)
+                .then((data) => {
+                    if (data.isValid) {
+                        // Redirect to the Home view
+                        this.$router.push('/');
+                    } else {
+                        // Token is not valid, you may want to handle this case
+                        // For example, clear the token from cookies and show a login form
+                        Cookies.remove('sessionToken');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error checking token validity:', error);
+                });
         }
     },
 };

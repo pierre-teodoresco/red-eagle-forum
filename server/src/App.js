@@ -45,10 +45,13 @@ db.once('open', () => {
 
 /* Routes */
 
-// User
+// User's register / login / session
 app.post('/api/register', userController.register);
 app.get('/api/login', userController.login);
+app.get('/api/check-token', userController.checkToken);
+app.get('/api/logout', userController.logout);
 
+/* Middlewares */
 app.use(userController.isLoggedIn); 
 
 app.get('/status', (req, res) => {

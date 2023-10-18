@@ -1,10 +1,14 @@
 // UserController.js
+
+import dotenv from 'dotenv';
+dotenv.config();
+
 import User from '../models/User.js';
-import { v4 as uuidv4 } from 'uuid';
+import jwt from 'jsonwebtoken';
 
 const userController = {
     /**
-     * @brief wrap the register model function
+     * @brief register a new user
      */
     register: async (req, res) => {
         try {
@@ -18,13 +22,14 @@ const userController = {
         }
     },
     /**
-     * @brief wrap the register model function
+     * @brief log in the user by creating a session
      */
     login: async (req, res) => {
         try {
             // Get user from database
             const user = await User.getByUsername(req.query.username);
 
+            // Check if user exists and password is correct
             if (!user || user.password !== req.query.password) {
                 // Wrong username or password
                 res.status(401).json({ error: 'Invalid credentials' });
@@ -33,10 +38,12 @@ const userController = {
                 // User found, return user data
                 
                 // Generate token
-                req.session.token = uuidv4();
+                const payload = { username: user.username };
+                const options = { expiresIn: '1h' };
+                req.session.token = jwt.sign(payload, process.env.JWT_SECRET, options);
 
-                // Copy user object
-                const userData = { ...user.toObject() };
+                // Copy user object and add token
+                const userData = { ...user.toObject(), token: req.session.token };
 
                 // Delete password from user object
                 delete userData.password;
@@ -46,6 +53,34 @@ const userController = {
             }
         } catch (error) {
             console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    /**
+     * @brief check token validity
+     */
+    checkToken: (req, res) => {
+        try {
+            const token = req.query.token;
+    
+            // Check if the token is valid
+            jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+                if (err) {
+                    // Token is not valid
+                    res.status(200).json({ isValid: false });
+                } else {
+                    // Token is valid
+
+                    // Build back the user from the token payload
+                    const user = {
+                        username: decoded.username, 
+                    };
+
+                    res.status(200).json({ isValid: true, user });
+                }
+            });
+        } catch (error) {
+            console.error('Error checking token validity:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
