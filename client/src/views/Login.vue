@@ -44,6 +44,12 @@
                 <div v-if="error" class="text-red-500 text-sm mt-2">
                     {{ error }}
                 </div>
+                
+                <div class="text-sm text-center">
+                    <router-link to="/register" class="font-medium text-indigo-600 hover:text-indigo-500">
+                        Don't have an account? Register here.
+                    </router-link>
+                </div>
 
                 <div>
                     <button type="submit"
@@ -86,9 +92,11 @@ export default {
          */
         async loginUser() {
             // Code to execute when the form is submitted
+            const username = this.username.trim();
+            const password = this.password.trim();
             try {
                 // Build the URL with username and password parameters
-                const uri = `/api/login?username=${this.username}&password=${this.password}`;
+                const uri = `/api/login?username=${username}&password=${password}`;
 
                 // Send the GET request to the backend
                 const response = await fetch(uri, {

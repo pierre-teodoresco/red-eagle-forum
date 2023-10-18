@@ -25,6 +25,12 @@
                     </div>
                 </div>
 
+                <div class="text-sm text-center">
+                    <router-link to="/login" class="font-medium text-indigo-600 hover:text-indigo-500">
+                        Already have an account? Login here.
+                    </router-link>
+                </div>
+
                 <div>
                     <button type="submit"
                         class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -57,7 +63,8 @@ export default {
     },
     methods: {
         async registerUser() {
-            console.log("register submit");
+            const username = this.username.trim();
+            const password = this.password.trim();
             try {
                 // Send the POST request with username and password to the backend
                 const response = await fetch('/api/register', {
@@ -66,8 +73,8 @@ export default {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        username: this.username,
-                        password: this.password,
+                        username,
+                        password,
                     }),
                 });
 

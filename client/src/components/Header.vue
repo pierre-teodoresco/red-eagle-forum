@@ -3,12 +3,12 @@
     <header class="bg-indigo-600 p-4">
         <div class="container mx-auto flex items-center justify-between">
             <div class="flex items-center">
-                <img src="#" alt="" class="h-8 w-8 mr-2">
+                <img src="../../img/RedEagleIcon.png" alt="" class="h-15 w-12 mr-2">
                 <h1 class="text-white text-lg font-semibold">{{ forumName }}</h1>
             </div>
             <nav class="space-x-4">
                 <router-link to="/" class="text-white hover:text-gray-300">Home</router-link>
-                <!-- Ajoute d'autres liens de navigation selon tes besoins -->
+                <!-- Add other links -->
             </nav>
             <div class="flex items-center">
                 <div v-if="user" class="text-white space-x-4">

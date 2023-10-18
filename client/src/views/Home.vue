@@ -2,8 +2,6 @@
 <template>
     <div>
         <Header :forumName="forumName" :user="user"/>
-
-        <h2>Welcome to {{ forumName }}</h2>
     </div>
 </template>
 
@@ -19,7 +17,7 @@ export default {
     data() {
         return {
             forumName: 'Red Eagle Forum', // Forum name
-            user: null,                     // User's username
+            user: null,                   // User's username
         }
     },
     mounted() {
