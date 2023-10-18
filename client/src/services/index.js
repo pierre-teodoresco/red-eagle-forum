@@ -3,7 +3,7 @@
 export default {
     /**
      * @brief check if the session token is valid
-     * @param [String] session token
+     * @param {string} token
      */
     async checkSessionTokenValidity(token) {
         // Send a GET request to the server to check the token

@@ -10,8 +10,7 @@ const User = mongoose.model('User', {
 const UserModel = {
     /**
      * @brief Insert a new user into db
-     * @param {string} username 
-     * @param {string} password 
+     * @param {JSON} user 
      */
     insert: async (user) => {
         const newUser = new User({
