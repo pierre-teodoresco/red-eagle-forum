@@ -5,6 +5,7 @@ dotenv.config();
 
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
+import Service from '../services/service.js';
 
 const userController = {
     /**
@@ -12,10 +13,13 @@ const userController = {
      */
     register: async (req, res) => {
         try {
-            const username = req.body.username;
-            const password = req.body.password;
-            await User.insert(username, password);
-            res.status(200).json({ message: 'User added successfully' });
+            const user = {
+                username: req.body.username,
+                password: req.body.password,
+            };
+            await User.insert(user);
+            req.session.token = Service.generateSessionToken(user);
+            res.status(200).json({ message: 'User added successfully', token: req.session.token });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -35,21 +39,9 @@ const userController = {
                 res.status(401).json({ error: 'Invalid credentials' });
                 return;
             } else {
-                // User found, return user data
-                
-                // Generate token
-                const payload = { username: user.username };
-                const options = { expiresIn: '1h' };
-                req.session.token = jwt.sign(payload, process.env.JWT_SECRET, options);
-
-                // Copy user object and add token
-                const userData = { ...user.toObject(), token: req.session.token };
-
-                // Delete password from user object
-                delete userData.password;
-
-                // Send user data
-                res.status(200).json(userData);
+                // User found and password correct
+                req.session.token = Service.generateSessionToken(user);
+                res.status(200).json({ token: req.session.token });
             }
         } catch (error) {
             console.error(error);

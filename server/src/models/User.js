@@ -13,10 +13,10 @@ const UserModel = {
      * @param {string} username 
      * @param {string} password 
      */
-    insert: async (username, password) => {
+    insert: async (user) => {
         const newUser = new User({
-            username,
-            password,
+            username: user.username,
+            password: user.password,
         });
     
         await newUser.save();

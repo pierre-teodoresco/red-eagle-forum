@@ -54,6 +54,8 @@
 
 <!-- src/views/Register.vue -->
 <script>
+import Cookies from 'js-cookie';
+
 export default {
     data() {
         return {
@@ -78,6 +80,8 @@ export default {
                     }),
                 });
 
+                const responseData = await response.json();
+
                 // Check if the request was successful
                 if (!response.ok) {
                     // Throw an error with the message from the backend
@@ -85,14 +89,17 @@ export default {
                     throw new Error(responseData.message || 'Registration failed');
                 }
 
-                // Use router.push to redirect to the home page
+                // Store session token in a cookie
+                Cookies.set('sessionToken', responseData.token, { expires: 1 });
+
+                // Redirect to the Home view on success
                 this.$router.push('/');
 
             } catch (error) {
                 console.error('Error during registration:', error);
 
             } finally {
-                // Reset the form
+                // Clear the form
                 this.username = '';
                 this.password = '';
             }

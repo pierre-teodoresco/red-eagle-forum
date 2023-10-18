@@ -137,7 +137,7 @@ export default {
                 // Display the error to the user
                 this.error = error.message;
             } finally {
-                // Reset the form fields
+                // Clear the form
                 this.username = '';
                 this.password = '';
             }
