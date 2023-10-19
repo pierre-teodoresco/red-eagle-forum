@@ -15,7 +15,7 @@ const userController = {
         try {
             const user = {
                 username: req.body.username,
-                password: req.body.password,
+                password: Service.cryptPassword(req.body.password),
             };
             await User.insert(user);
             req.session.token = Service.generateSessionToken(user);
@@ -34,7 +34,7 @@ const userController = {
             const user = await User.getByUsername(req.query.username);
 
             // Check if user exists and password is correct
-            if (!user || user.password !== req.query.password) {
+            if (!user || Service.comparePassword(user.password, req.query.password)) {
                 // Wrong username or password
                 res.status(401).json({ error: 'Invalid credentials' });
                 return;
