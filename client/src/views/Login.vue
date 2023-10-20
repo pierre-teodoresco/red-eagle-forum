@@ -44,7 +44,7 @@
                 <div v-if="error" class="text-red-500 text-sm mt-2">
                     {{ error }}
                 </div>
-                
+
                 <div class="text-sm text-center">
                     <router-link to="/register" class="font-medium text-indigo-600 hover:text-indigo-500">
                         Don't have an account? Register here.
@@ -95,15 +95,16 @@ export default {
             const username = this.username.trim();
             const password = this.password.trim();
             try {
-                // Build the URL with username and password parameters
-                const uri = `/api/login?username=${username}&password=${password}`;
-
                 // Send the GET request to the backend
-                const response = await fetch(uri, {
-                    method: 'GET',
+                const response = await fetch('/api/login', {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
+                    body: JSON.stringify({
+                        username,
+                        password,
+                    }),
                 });
 
                 // Get the data from the backend response
@@ -112,28 +113,13 @@ export default {
                 // Check if the request was successful
                 if (!response.ok) {
                     // The request failed
-
-                    if (response.status === 401) {
-                        // Code 401 Unauthorized: Incorrect login credentials
-                        throw new Error('Invalid username or password');
-                    } else if (response.status === 500) {
-                        // Code 500 Internal Server Error: Server-side error
-                        throw new Error('Server error. Please try again later.');
-                    } else {
-                        // Other unhandled errors
-                        throw new Error(responseData.message || 'Login failed');
-                    }
+                    throw new Error(responseData.error || 'Login failed');
                 }
-
-                // Store session token in a cookie
-                Cookies.set('sessionToken', responseData.token, { expires: 1 });
 
                 // Redirect to the Home view on success
                 this.$router.push('/');
 
             } catch (error) {
-                console.error('Error during login:', error);
-
                 // Display the error to the user
                 this.error = error.message;
             } finally {
@@ -143,27 +129,18 @@ export default {
             }
         },
     },
-    mounted() {
+    async mounted() {
         // Code to execute when the page is loaded
-
-        // Check if the token is already stored in cookies
-        const sessionToken = Cookies.get('sessionToken');
-        if (sessionToken) {
-            // Check the validity of the token by sending a request to the server
-            Service.checkSessionTokenValidity(sessionToken)
-                .then((data) => {
-                    if (data.isValid) {
-                        // Redirect to the Home view
-                        this.$router.push('/');
-                    } else {
-                        // Token is not valid, you may want to handle this case
-                        // For example, clear the token from cookies and show a login form
-                        Cookies.remove('sessionToken');
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error checking token validity:', error);
-                });
+        try {
+            // Check if the user is logged in
+            const data = await Service.isLoggedIn();
+            if (data.isLoggedIn) {
+                // Redirect to the Home view
+                this.$router.push('/');
+            }
+        } catch (error) {
+            // Display a user-friendly error message
+            this.error = 'Failed to check login status. Please try again later.';
         }
     },
 };
