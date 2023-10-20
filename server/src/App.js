@@ -47,12 +47,12 @@ db.once('open', () => {
 
 // User's register / login / session
 app.post('/api/register', userController.register);
-app.get('/api/login', userController.login);
-app.get('/api/check-token', userController.checkToken);
-app.get('/api/logout', userController.logout);
+app.post('/api/login', userController.login);
+app.post('/api/logout', userController.logout)
+app.get('/api/check-login', userController.checkLogin);
 
 /* Middlewares */
-app.use(userController.isLoggedIn); 
+//app.use(userController.isLoggedIn); 
 
 app.get('/status', (req, res) => {
     res.send({

@@ -85,12 +85,8 @@ export default {
                 // Check if the request was successful
                 if (!response.ok) {
                     // Throw an error with the message from the backend
-                    const responseData = await response.json();
                     throw new Error(responseData.message || 'Registration failed');
                 }
-
-                // Store session token in a cookie
-                Cookies.set('sessionToken', responseData.token, { expires: 1 });
 
                 // Redirect to the Home view on success
                 this.$router.push('/');
