@@ -2,36 +2,28 @@
 
 export default {
     /**
-     * @brief check if the session token is valid
-     * @param {string} token
+     * @brief Verify if the user is logged in
+     * @return {JSON} json containing if logged in
+     *  - a boolean isLoggedIn to true and the user data if logged in
+     *  - a boolean isLoggedIn to false and an empty object otherwise
      */
-    async checkSessionTokenValidity(token) {
-        // Send a GET request to the server to check the token
-        try {
-            const uri = `/api/check-token?token=${token}`;
-            const response = await fetch(uri, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
+    async isLoggedIn() {
+        // Check if the user is already logged in
+        const response = await fetch('/api/check-login', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-            const responseData = await response.json();
+        // Get the data from the backend response
+        const responseData = await response.json();
 
-            if (!response.ok) {
-                // Handle server errors or other issues
-                throw new Error(responseData.message || 'Internal server error');
-            } else {
-                // Return true if the token is valid, false otherwise
-                return {
-                    isValid: responseData.isValid,
-                    user: responseData.user,
-                }
-            }
-        } catch (error) {
-            console.error('Error checking token validity: ', error);
-            throw error;
+        if (!response.ok) {
+            // The request failed
+            throw new Error('Internal Server Error');
         }
+
+        return responseData;
     },
 }
-

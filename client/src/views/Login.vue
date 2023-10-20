@@ -132,28 +132,11 @@ export default {
     async mounted() {
         // Code to execute when the page is loaded
         try {
-            // Check if the user is already logged in
-            const response = await fetch('/api/check-login', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            // Get the data from the backend response
-            const responseData = await response.json();
-
-            if (!response.ok) {
-                // The request failed
-                throw new Error('Internal Server Error');
-            }
-
             // Check if the user is logged in
-            if (responseData.isLoggedIn) {
+            if (await Service.isLoggedIn().isLoggedIn) {
                 // Redirect to the Home view
                 this.$router.push('/');
             }
-
         } catch (error) {
             // Display a user-friendly error message
             this.error = 'Failed to check login status. Please try again later.';

@@ -68,6 +68,7 @@ const userController = {
     checkLogin: (req, res) => {
         // Check the session to see if the user is logged in
         if (req.session.user) {
+            console.log(req.session.user);
             res.status(200).json({ message: 'User is logged in', isLoggedIn: true, user: req.session.user });
         } else {
             res.status(200).json({ message: 'User is not logged in', isLoggedIn: false, user: null });
