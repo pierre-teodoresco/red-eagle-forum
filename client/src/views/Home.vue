@@ -7,7 +7,6 @@
 
 <script>
 import Header from '../components/Header.vue';
-import Cookies from 'js-cookie';
 import Service from '../services'
 
 export default {
@@ -24,7 +23,6 @@ export default {
         try {
             // Check if the user is logged in
             const data = await Service.isLoggedIn();
-            console.log(data);
             this.user = data.user;
         } catch (error) {
             console.log(error);

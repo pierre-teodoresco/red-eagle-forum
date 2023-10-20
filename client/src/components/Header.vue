@@ -39,7 +39,7 @@ export default {
             try {
                 // Send a request to the server to logout the user
                 const response = await fetch('/api/logout', {
-                    method: 'GET',
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -49,15 +49,11 @@ export default {
 
                 if (!response.ok) {
                     // Handle server errors or other issues
-                    throw new Error(responseData.message || 'Internal server error');
-                } else {
-                    // Remove the token from the cookie
-                    Cookie.remove('sessionToken');
+                    throw new Error(responseData.error || 'Internal server error');
                 }
 
             } catch (error) {
                 console.error('Error logging out: ', error);
-                throw error;
             }
 
             // Refresh the page

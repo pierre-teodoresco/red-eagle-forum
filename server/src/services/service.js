@@ -7,7 +7,15 @@ import argon2 from 'argon2';
 
 export default {
     /**
-     * @brief chiffre le mot de passe avec bcrypt
+     * @brief creates a session for the user
+     */
+    createSession(user) {
+        const userData = { ...user };
+        delete userData.password;
+        return userData;
+    },
+    /**
+     * @brief hass password with argon2
      * @param {string} password
      * @return {string} password hash
      */

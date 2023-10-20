@@ -133,7 +133,8 @@ export default {
         // Code to execute when the page is loaded
         try {
             // Check if the user is logged in
-            if (await Service.isLoggedIn().isLoggedIn) {
+            const data = await Service.isLoggedIn();
+            if (data.isLoggedIn) {
                 // Redirect to the Home view
                 this.$router.push('/');
             }

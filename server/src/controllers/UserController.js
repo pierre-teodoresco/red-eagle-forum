@@ -12,12 +12,23 @@ const userController = {
      */
     register: async (req, res) => {
         try {
+            const sameUsername = await User.getByUsername(req.body.username);
+            if (sameUsername) {
+                // Username already exists
+                res.status(409).json({ error: 'Username already exists' });
+                return;
+            }
+            
             const hashedPassword = await Service.hashPassword(req.body.password);
             const user = {
                 username: req.body.username,
                 password: hashedPassword,
             };
             await User.insert(user);
+
+            // Create a session for the user (log them in)
+            req.session.user = Service.createSession(user);
+
             res.status(200).json({ message: 'User added successfully' });
         } catch (error) {
             console.error(error);
@@ -31,7 +42,6 @@ const userController = {
         try {
             // Get user from database
             const user = await User.getByUsername(req.body.username);
-            console.log(user);
 
             // Check if user exists and password is correct
             if (!user || !(await Service.comparePassword(user.password, req.body.password))) {
@@ -39,8 +49,8 @@ const userController = {
                 res.status(401).json({ error: 'Invalid credentials' });
             } else {
                 // User found and password correct
-                req.session.user = { ...user.toObject() };
-                delete req.session.user.password;
+                // We use toObject() because user is a mongoose object
+                req.session.user = Service.createSession(user.toObject());
                 res.status(200).json({ message: 'Logged in successfully' });
             }
         } catch (error) {

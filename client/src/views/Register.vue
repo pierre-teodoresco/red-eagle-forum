@@ -25,6 +25,10 @@
                     </div>
                 </div>
 
+                <div v-if="error" class="text-red-500 text-sm mt-2">
+                    {{ error }}
+                </div>
+
                 <div class="text-sm text-center">
                     <router-link to="/login" class="font-medium text-indigo-600 hover:text-indigo-500">
                         Already have an account? Login here.
@@ -61,6 +65,7 @@ export default {
         return {
             username: '',   // User's username
             password: '',   // User's password
+            error: null,    // Error message from the server
         };
     },
     methods: {
@@ -85,7 +90,7 @@ export default {
                 // Check if the request was successful
                 if (!response.ok) {
                     // Throw an error with the message from the backend
-                    throw new Error(responseData.message || 'Registration failed');
+                    throw new Error(responseData.error || 'Registration failed');
                 }
 
                 // Redirect to the Home view on success
@@ -93,7 +98,7 @@ export default {
 
             } catch (error) {
                 console.error('Error during registration:', error);
-
+                this.error = error.message;
             } finally {
                 // Clear the form
                 this.username = '';
