@@ -1,13 +1,37 @@
-// User.js
+// models/User.js
 import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 
 const User = mongoose.model('User', {
-    username: String,
-    password: String,
+    username: {
+        type: String,
+        unique: true,
+        required: true,
+        trim: true
+    },
+    password: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    email: {
+        type: String,
+        unique: true,
+        required: false,
+        trim: true
+    },
+    name: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    surname: {
+        type: String,
+        required: false,
+        trim: true
+    },
 });
 
-const UserModel = {
+export default {
     /**
      * @brief Insert a new user into db
      * @param {JSON} user 
@@ -27,7 +51,26 @@ const UserModel = {
      */
     getByUsername: async (username) => {
         return await User.findOne({ username });
-    }
-};
+    },
+    /**
+     * @brief Update user fields
+     * @param {string} username - Username of the user to update
+     * @param {object} updatedFields - Object containing the fields to update
+     * @returns {object} - Updated user object
+     */
+    update: async (username, updatedFields) => {
+        const user = await User.findOne({ username });
 
-export default UserModel;
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // Update fields
+        Object.assign(user, updatedFields);
+
+        // Save the updated user
+        await user.save();
+
+        return user.toObject();
+    },
+};

@@ -9,7 +9,7 @@ export default {
      */
     async isLoggedIn() {
         // Check if the user is already logged in
-        const response = await fetch('/api/check-login', {
+        const response = await fetch('/user/check-login', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

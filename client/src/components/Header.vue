@@ -38,7 +38,7 @@ export default {
         async logout() {
             try {
                 // Send a request to the server to logout the user
-                const response = await fetch('/api/logout', {
+                const response = await fetch('/user/logout', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

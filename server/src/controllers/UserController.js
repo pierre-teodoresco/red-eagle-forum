@@ -1,7 +1,4 @@
-// UserController.js
-
-import dotenv from 'dotenv';
-dotenv.config();
+// controllers/UserController.js
 
 import User from '../models/User.js';
 import Service from '../services/service.js';
@@ -82,6 +79,32 @@ const userController = {
             res.status(200).json({ message: 'User is logged in', isLoggedIn: true, user: req.session.user });
         } else {
             res.status(200).json({ message: 'User is not logged in', isLoggedIn: false, user: null });
+        }
+    },
+    /**
+     * @brief update user's fields
+     */
+    update: async (req, res) => {
+        try {
+            const updatedFields = {};
+            if (req.body.email) {
+                updatedFields.email = req.body.email;
+            }
+            if (req.body.name) {
+                updatedFields.name = req.body.name;
+            }
+            if (req.body.surname) {
+                updatedFields.surname = req.body.surname;
+            }
+            if (req.body.password) {
+                updatedFields.password = await Service.hashPassword(req.body.password);
+            }
+            const updatedUser = await User.update(req.params.username, updatedFields);
+            delete updatedUser.password;
+            res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
         }
     },
 };

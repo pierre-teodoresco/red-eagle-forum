@@ -96,7 +96,7 @@ export default {
             const password = this.password.trim();
             try {
                 // Send the GET request to the backend
-                const response = await fetch('/api/login', {
+                const response = await fetch('/user/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
