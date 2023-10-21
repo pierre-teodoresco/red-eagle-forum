@@ -1,13 +1,13 @@
 <!-- src/views/Home.vue -->
 <template>
     <div>
-        <Header :forumName="forumName" :user="user"/>
+        <Header :user="user" :currentPage="pageName" />
     </div>
 </template>
 
 <script>
 import Header from '../components/Header.vue';
-import Service from '../services'
+import UserServices from '../services/UserServices.js'
 
 export default {
     components: {
@@ -15,14 +15,14 @@ export default {
     },
     data() {
         return {
-            forumName: 'Red Eagle Forum', // Forum name
+            pageName: 'Home',             // Name of the current page
             user: null,                   // User's username
         }
     },
     async mounted() {
         try {
             // Check if the user is logged in
-            const data = await Service.isLoggedIn();
+            const data = await UserServices.isLoggedIn();
             this.user = data.user;
         } catch (error) {
             console.log(error);

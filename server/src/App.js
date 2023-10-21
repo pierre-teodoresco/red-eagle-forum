@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import session from 'express-session';
 
-import userController from './controllers/UserController.js';
+import userRouter from './routes/UserRouter.js';
 
 const app = express();
 const port = process.env.PORT;
@@ -44,15 +44,9 @@ db.once('open', () => {
 });
 
 /* Routes */
-
-// User's register / login / session
-app.post('/api/register', userController.register);
-app.post('/api/login', userController.login);
-app.post('/api/logout', userController.logout)
-app.get('/api/check-login', userController.checkLogin);
+app.use('/user', userRouter);
 
 /* Middlewares */
-//app.use(userController.isLoggedIn); 
 
 app.get('/status', (req, res) => {
     res.send({
