@@ -139,22 +139,3 @@ export default {
     },
 };
 </script>
-  
-<style scoped>
-.input-field {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 0.25rem;
-}
-
-.btn-primary {
-    background-color: #4caf50;
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.25rem;
-    cursor: pointer;
-}
-</style>
-  
