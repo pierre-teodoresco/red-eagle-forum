@@ -10,6 +10,7 @@ import cors from 'cors';
 import session from 'express-session';
 
 import userRouter from './routes/UserRouter.js';
+import topicRouter from './routes/TopicRouter.js';
 
 const app = express();
 const port = process.env.PORT;
@@ -45,6 +46,7 @@ db.once('open', () => {
 
 /* Routes */
 app.use('/user', userRouter);
+app.use('/topic', topicRouter);
 
 /* Middlewares */
 
