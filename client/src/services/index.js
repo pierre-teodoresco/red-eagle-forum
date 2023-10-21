@@ -24,6 +24,7 @@ export default {
             throw new Error('Internal Server Error');
         }
 
+        console.log(responseData);
         return responseData;
     },
 }

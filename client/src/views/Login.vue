@@ -74,7 +74,6 @@
 
 <!-- src/views/Login.vue -->
 <script>
-import Cookies from 'js-cookie';
 import Service from '../services'
 
 export default {

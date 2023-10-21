@@ -4,10 +4,11 @@
         <div class="container mx-auto flex items-center justify-between">
             <div class="flex items-center">
                 <img src="../../img/RedEagleIcon.png" alt="" class="h-15 w-12 mr-2">
-                <h1 class="text-white text-lg font-semibold">{{ forumName }}</h1>
+                <h1 class="text-white text-lg font-semibold">Red Eagle Forum</h1>
             </div>
             <nav class="space-x-4">
                 <router-link to="/" class="text-white hover:text-gray-300">Home</router-link>
+                <router-link to="/profile" class="text-white hover:text-gray-300">Profile</router-link>
                 <!-- Add other links -->
             </nav>
             <div class="flex items-center">
@@ -27,11 +28,8 @@
 </template>
   
 <script>
-import Cookie from 'js-cookie'
-
 export default {
     props: {
-        forumName: String, // Pass the forum name as a prop
         user: Object,      // Pass the user object as a prop
     },
     methods: {

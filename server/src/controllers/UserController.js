@@ -86,21 +86,15 @@ const userController = {
      */
     update: async (req, res) => {
         try {
-            const updatedFields = {};
-            if (req.body.email) {
-                updatedFields.email = req.body.email;
+            // Check if the user is logged in
+            if (!req.session.user) {
+                res.status(401).json({ error: 'Unauthorized' });
+                return;
             }
-            if (req.body.name) {
-                updatedFields.name = req.body.name;
-            }
-            if (req.body.surname) {
-                updatedFields.surname = req.body.surname;
-            }
-            if (req.body.password) {
-                updatedFields.password = await Service.hashPassword(req.body.password);
-            }
-            const updatedUser = await User.update(req.params.username, updatedFields);
-            delete updatedUser.password;
+
+            // Create a new session with the updated user
+            const updatedUser = await User.update(req.params.username, req.body);
+            req.session.user = Service.createSession(updatedUser);
             res.status(200).json({ message: 'User updated successfully', user: updatedUser });
         } catch (error) {
             console.error(error);

@@ -1,7 +1,7 @@
 <!-- src/views/Home.vue -->
 <template>
     <div>
-        <Header :forumName="forumName" :user="user"/>
+        <Header :user="user"/>
     </div>
 </template>
 
@@ -15,7 +15,6 @@ export default {
     },
     data() {
         return {
-            forumName: 'Red Eagle Forum', // Forum name
             user: null,                   // User's username
         }
     },
