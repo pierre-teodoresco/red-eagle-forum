@@ -1,5 +1,10 @@
 // controllers/UserController.js
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+import jwt from 'jsonwebtoken';
+
 import User from '../models/User.js';
 import Service from '../services/service.js';
 
@@ -44,12 +49,19 @@ const userController = {
             if (!user || !(await Service.comparePassword(user.password, req.body.password))) {
                 // Wrong username or password
                 res.status(401).json({ error: 'Invalid credentials' });
-            } else {
-                // User found and password correct
-                // We use toObject() because user is a mongoose object
-                req.session.user = Service.createSession(user.toObject());
-                res.status(200).json({ message: 'Logged in successfully' });
+            } 
+
+            // We use toObject() because user is a mongoose object
+            req.session.user = Service.createSession(user.toObject());
+
+            if (req.body.rememberMe) {
+                const payload = { username: user.username };
+                const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+                res.status(200).json({ message: 'Logged in successfully', token: token  });
+                return;
             }
+            
+            res.status(200).json({ message: 'Logged in successfully' });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -75,7 +87,6 @@ const userController = {
     checkLogin: (req, res) => {
         // Check the session to see if the user is logged in
         if (req.session.user) {
-            console.log(req.session.user);
             res.status(200).json({ message: 'User is logged in', isLoggedIn: true, user: req.session.user });
         } else {
             res.status(200).json({ message: 'User is not logged in', isLoggedIn: false, user: null });
@@ -101,6 +112,25 @@ const userController = {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
+    /**
+     * @brief check remember me token
+     */
+    checkRememberMe: async (req, res) => {
+        try {
+            const token = req.query.token;
+            const payload = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await User.getByUsername(payload.username);
+
+            if (!user) {
+                res.status(401).json({ error: 'Invalid token' });
+            } else {
+                res.status(200).json({ message: 'Valid token', user: user });
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
 };
 
 export default userController;

@@ -1,5 +1,7 @@
 // service/index.js
 
+import Cookies from 'js-cookie';
+
 export default {
     /**
      * @brief Verify if the user is logged in
@@ -24,7 +26,45 @@ export default {
             throw new Error('Internal Server Error');
         }
 
-        console.log(responseData);
         return responseData;
+    },
+    /**
+     * @brief Remember the user
+     * @param {String} token
+     */
+    rememberMe(token) {
+        // Remember the user
+        Cookies.set('rememberMeToken', token, { expires: 7 });
+    },
+    /**
+     * @brief check if the user is remembered
+     * @return {JSON} json containing if remembered
+     * - a boolean isRemembered to true and the user data if remembered
+     * - a boolean isRemembered to false and an empty object otherwise
+     */
+    async isRemembered() {
+        // Check if the user is remembered
+        const rememberMeToken = Cookies.get('rememberMeToken');
+        
+        if (!rememberMeToken) {
+            return { isRemembered: false };
+        }
+        
+        const response = await fetch(`/user/check-remember-me?token=${rememberMeToken}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        // Get the data from the backend response
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            // The request failed
+            throw new Error('Internal Server Error');
+        }
+
+        return { isRemembered: true, user: responseData.user };
     },
 }

@@ -28,7 +28,8 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
                         <input id="remember_me" name="remember_me" type="checkbox" v-model="rememberMe"
-                            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                            @click="rememberMe = !rememberMe">
                         <label for="remember_me" class="ml-2 block text-sm text-gray-900">
                             Remember me
                         </label>
@@ -103,6 +104,7 @@ export default {
                     body: JSON.stringify({
                         username,
                         password,
+                        rememberMe: this.rememberMe,
                     }),
                 });
 
@@ -113,6 +115,11 @@ export default {
                 if (!response.ok) {
                     // The request failed
                     throw new Error(responseData.error || 'Login failed');
+                }
+
+                if (responseData.token) {
+                    // Remember the user
+                    Service.rememberMe(responseData.token);
                 }
 
                 // Redirect to the Home view on success
@@ -130,6 +137,8 @@ export default {
     },
     async mounted() {
         // Code to execute when the page is loaded
+
+        // Check if the user is logged in
         try {
             // Check if the user is logged in
             const data = await Service.isLoggedIn();
@@ -140,6 +149,19 @@ export default {
         } catch (error) {
             // Display a user-friendly error message
             this.error = 'Failed to check login status. Please try again later.';
+        }
+
+        // Fill in the username field if the user is remembered
+        try {
+            // Check if the user is remembered
+            const data = await Service.isRemembered();
+            if (data.isRemembered) {
+                // Fill in the username field
+                this.username = data.user.username;
+            }
+        } catch (error) {
+            // Display a user-friendly error message
+            this.error = 'Failed to check remember status. Please try again later.';
         }
     },
 };

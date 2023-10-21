@@ -9,5 +9,6 @@ router.post('/login', userController.login);
 router.post('/logout', userController.logout);
 router.get('/check-login', userController.checkLogin);
 router.post('/update/:username', userController.update);
+router.get('/check-remember-me', userController.checkRememberMe);
 
 export default router;
