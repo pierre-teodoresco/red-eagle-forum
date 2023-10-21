@@ -75,7 +75,7 @@
 
 <!-- src/views/Login.vue -->
 <script>
-import Service from '../services'
+import UserServices from '../services/UserServices.js'
 
 export default {
     data() {
@@ -119,7 +119,10 @@ export default {
 
                 if (responseData.token) {
                     // Remember the user
-                    Service.rememberMe(responseData.token);
+                    UserServices.rememberMe(responseData.token);
+                } else {
+                    // Forget the user
+                    UserServices.forgetMe();
                 }
 
                 // Redirect to the Home view on success
@@ -141,27 +144,25 @@ export default {
         // Check if the user is logged in
         try {
             // Check if the user is logged in
-            const data = await Service.isLoggedIn();
+            const data = await UserServices.isLoggedIn();
             if (data.isLoggedIn) {
                 // Redirect to the Home view
                 this.$router.push('/');
             }
         } catch (error) {
-            // Display a user-friendly error message
-            this.error = 'Failed to check login status. Please try again later.';
+            console.log(error);
         }
 
         // Fill in the username field if the user is remembered
         try {
             // Check if the user is remembered
-            const data = await Service.isRemembered();
+            const data = await UserServices.isRemembered();
             if (data.isRemembered) {
                 // Fill in the username field
                 this.username = data.user.username;
             }
         } catch (error) {
-            // Display a user-friendly error message
-            this.error = 'Failed to check remember status. Please try again later.';
+            console.log(error);
         }
     },
 };

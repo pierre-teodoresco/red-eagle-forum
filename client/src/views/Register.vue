@@ -17,6 +17,12 @@
                             placeholder="Username">
                     </div>
                     <div>
+                        <label for="email" class="sr-only">E-mail</label>
+                        <input id="email" name="email" type="text" v-model="email" autocomplete="email" required
+                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                            placeholder="E-mail">
+                    </div>
+                    <div>
                         <label for="password" class="sr-only">Password</label>
                         <input id="password" name="password" type="password" v-model="password"
                             autocomplete="current-password" required
@@ -58,12 +64,11 @@
 
 <!-- src/views/Register.vue -->
 <script>
-import Cookies from 'js-cookie';
-
 export default {
     data() {
         return {
             username: '',   // User's username
+            email: '',      // User's email
             password: '',   // User's password
             error: null,    // Error message from the server
         };
@@ -81,6 +86,7 @@ export default {
                     },
                     body: JSON.stringify({
                         username,
+                        email: this.email,
                         password,
                     }),
                 });
@@ -102,6 +108,7 @@ export default {
             } finally {
                 // Clear the form
                 this.username = '';
+                this.email = '';
                 this.password = '';
             }
         },

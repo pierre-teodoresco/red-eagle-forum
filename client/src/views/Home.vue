@@ -7,7 +7,7 @@
 
 <script>
 import Header from '../components/Header.vue';
-import Service from '../services'
+import UserServices from '../services/UserServices.js'
 
 export default {
     components: {
@@ -22,7 +22,7 @@ export default {
     async mounted() {
         try {
             // Check if the user is logged in
-            const data = await Service.isLoggedIn();
+            const data = await UserServices.isLoggedIn();
             this.user = data.user;
         } catch (error) {
             console.log(error);

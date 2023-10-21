@@ -13,17 +13,11 @@ const userController = {
      * @brief register a new user
      */
     register: async (req, res) => {
-        try {
-            const sameUsername = await User.getByUsername(req.body.username);
-            if (sameUsername) {
-                // Username already exists
-                res.status(409).json({ error: 'Username already exists' });
-                return;
-            }
-            
+        try {  
             const hashedPassword = await Service.hashPassword(req.body.password);
             const user = {
                 username: req.body.username,
+                email: req.body.email,
                 password: hashedPassword,
             };
             await User.insert(user);

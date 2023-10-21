@@ -16,7 +16,7 @@ const User = mongoose.model('User', {
     email: {
         type: String,
         unique: true,
-        required: false,
+        required: true,
         trim: true
     },
     name: {
@@ -39,6 +39,7 @@ export default {
     insert: async (user) => {
         const newUser = new User({
             username: user.username,
+            email: user.email,
             password: user.password,
         });
     

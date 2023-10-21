@@ -1,4 +1,4 @@
-// service/index.js
+// service/UserServices.js
 
 import Cookies from 'js-cookie';
 
@@ -35,6 +35,15 @@ export default {
     rememberMe(token) {
         // Remember the user
         Cookies.set('rememberMeToken', token, { expires: 7 });
+    },
+    /**
+     * @brief Forget the user
+     */
+    forgetMe() {
+        // Forget the user if remembered
+        if (Cookies.get('rememberMeToken')) {
+            Cookies.remove('rememberMeToken');
+        }
     },
     /**
      * @brief check if the user is remembered
