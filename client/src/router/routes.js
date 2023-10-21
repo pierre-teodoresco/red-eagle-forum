@@ -4,6 +4,7 @@ import Home from '../views/Home.vue';
 import Register from '../views/Register.vue';
 import Login from '../views/Login.vue';
 import Profile from '../views/Profile.vue';
+import CreateTopic from '../views/CreateTopic.vue';
 
 const routes = [
     {
@@ -26,6 +27,11 @@ const routes = [
         name: 'Profile',
         component: Profile,
     },
+    {
+        path:'/create-topic',
+        name:'CreateTopic',
+        component: CreateTopic,
+    }
 ];
 
 const router = createRouter({
