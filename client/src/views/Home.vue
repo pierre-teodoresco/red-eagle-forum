@@ -1,7 +1,7 @@
 <!-- src/views/Home.vue -->
 <template>
     <div>
-        <Header :user="user"/>
+        <Header :user="user" :currentPage="pageName" />
     </div>
 </template>
 
@@ -15,6 +15,7 @@ export default {
     },
     data() {
         return {
+            pageName: 'Home',             // Name of the current page
             user: null,                   // User's username
         }
     },

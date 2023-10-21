@@ -1,7 +1,7 @@
 <!-- src/views/Profile.vue -->
 <template>
     <div>
-        <Header :user="user" />
+        <Header :user="user" :currentPage="pageName" />
     </div>
 
     <div class="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -82,6 +82,7 @@ export default {
     },
     data() {
         return {
+            pageName: 'Profile',
             user: {
                 username: '',
                 email: '',

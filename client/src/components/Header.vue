@@ -4,16 +4,14 @@
         <div class="container mx-auto flex items-center justify-between">
             <div class="flex items-center">
                 <img src="../../img/RedEagleIcon.png" alt="" class="h-15 w-12 mr-2">
-                <h1 class="text-white text-lg font-semibold">Red Eagle Forum</h1>
+                <router-link to="/" class="text-white text-lg font-semibold hover:text-gray-300">Red Eagle Forum</router-link>
             </div>
             <nav class="space-x-4">
-                <router-link to="/" class="text-white hover:text-gray-300">Home</router-link>
-                <router-link to="/profile" class="text-white hover:text-gray-300">Profile</router-link>
                 <!-- Add other links -->
             </nav>
             <div class="flex items-center">
                 <div v-if="user" class="text-white space-x-4">
-                    <span>{{ user.username }}</span>
+                    <router-link to="/profile" class="text-white hover:text-gray-300">{{ user.username }}</router-link>
                     <button @click="logout" class="text-white hover:text-gray-300">
                         Logout
                     </button>
@@ -31,6 +29,7 @@
 export default {
     props: {
         user: Object,      // Pass the user object as a prop
+        currentPage: String,
     },
     methods: {
         async logout() {
