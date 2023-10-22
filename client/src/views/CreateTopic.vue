@@ -65,8 +65,8 @@
             </div>
         </div>
     </div>
-    <popup-component :message="Topic crée avec succès !" ref="popupComponent"></popup-component>
-    <error-popup :message="Erreur lors de la création du topic" ref="errorPopup"></error-popup>
+    <popup-component :message=validation ref="popupComponent"></popup-component>
+    <error-popup :message=error ref="errorPopup"></error-popup>
 </template>
   
 <script>
@@ -83,6 +83,8 @@ export default {
     },
     data() {
         return {
+            validation:"Topic crée avec succès",
+            error:"Erreur lors de la création du topic",
             pageName: 'Create Topic',      // Name of the current page
             user: null,                   // User's username
             title: '',                    // Champ de saisie pour le titre
