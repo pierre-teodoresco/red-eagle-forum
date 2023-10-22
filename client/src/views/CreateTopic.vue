@@ -38,7 +38,7 @@
                         <input id="image" name="image" type="file" accept="image/*"
                             class="appearance-none rounded-none relative block w-full px-2 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                             @change="handleImageChange" ref="imageInput" style="display:none;">
-                        <button @click="openFileInput"
+                        <button type="button" @click="openFileInput"
                             class="bg-indigo-400 text-white px-2 py-2 rounded-full hover:bg-indigo-600 cursor-pointer">
                             Choisir un fichier
                         </button>
@@ -65,20 +65,29 @@
             </div>
         </div>
     </div>
+    <popup-component ref="popupComponent"></popup-component>
+    <error-popup ref="erreurComponent"></error-popup>
 </template>
   
 <script>
 import Header from '../components/Header.vue';
 import UserServices from '../services/UserServices.js'
+import PopupComponent from "./PopUpValidationTopic.vue";
+import ErreurComponent from "./PopUpErreurTopic.vue";
 
 export default {
     components: {
         Header,
+        "popup-component": PopupComponent,
+        "errorPopup": ErreurComponent,
     },
     data() {
         return {
             pageName: 'Create Topic',      // Name of the current page
             user: null,                   // User's username
+            title: '',                    // Champ de saisie pour le titre
+            description: '',              // Champ de saisie pour la description
+            selectedImage: null           // Champ pour afficher l'image sélectionnée
         }
     },
     async mounted() {
@@ -93,7 +102,24 @@ export default {
     methods: {
         async createTopic() {
             try {
-                // Create a new topic
+                // Faire requete POST pour créer un topic dans la bd
+                // const response = await TopicServices.createTopic({
+                //     title: this.title,
+                //     description: this.description,
+                //     image: this.selectedImage
+                // });
+
+                const response = true;    //pour tester
+
+                if (response) {                 // si la création du topic fonctionne alors afficher le popup et rediriger vers la page home
+                    this.showPopup();
+                    //attendre fin du popup et rediriger vers la page Home.vue
+                    setTimeout(() => {
+                        this.$router.push("/");
+                    }, 2000);
+                } else {
+                    this.showErreur();
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -110,6 +136,12 @@ export default {
                 // Faire quelque chose avec le fichier, par exemple l'afficher dans une image
                 this.selectedImage = URL.createObjectURL(file); // Stocker l'URL de l'image
             }
+        },
+        showPopup() {
+            this.$refs.popupComponent.showPopup();
+        },
+        showErreur() {
+            this.$refs.erreurComponent.showPopup();
         },
     },
 };
