@@ -1,13 +1,17 @@
 <template>
     <div>
         <div v-if="showingPopup" class="popup">
-            Erreur lors de la création du topic !
+           {{ message }}
         </div>
     </div>
 </template>
   
 <script>
 export default {
+    props: {
+        message: String
+    },
+
     data() {
         return {
             showingPopup: false
@@ -38,7 +42,8 @@ export default {
 }
 
 .popup {
-    background: red;
+    background: green;
+    /* Fond vert */
     color: white;
     /* Texte blanc */
     padding: 10px;

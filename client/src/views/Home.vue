@@ -1,7 +1,7 @@
 <!-- src/views/Home.vue -->
 <template>
     <div>
-        <Header :forumName="forumName" :user="user" />
+        <Header :user="user" :currentPage="pageName" />
     </div>
     <!-- Affichez la liste de tous les topics dispo dans la bd -->
     <div>

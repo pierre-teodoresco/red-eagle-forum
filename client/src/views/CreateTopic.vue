@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header :forumName="forumName" :user="user" />
+        <Header :user="user" :currentPage="pageName" />
     </div>
     <div class="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
@@ -65,21 +65,21 @@
             </div>
         </div>
     </div>
-    <popup-component ref="popupComponent"></popup-component>
-    <error-popup ref="erreurComponent"></error-popup>
+    <popup-component :message="Topic crée avec succès !" ref="popupComponent"></popup-component>
+    <error-popup :message="Erreur lors de la création du topic" ref="errorPopup"></error-popup>
 </template>
   
 <script>
 import Header from '../components/Header.vue';
 import UserServices from '../services/UserServices.js'
-import PopupComponent from "./PopUpValidationTopic.vue";
-import ErreurComponent from "./PopUpErreurTopic.vue";
+import PopupComponent from "../components/PopUpValidation.vue";
+import ErrorComponent from "../components/PopUpError.vue";
 
 export default {
     components: {
         Header,
-        "popup-component": PopupComponent,
-        "errorPopup": ErreurComponent,
+        "popupComponent": PopupComponent,
+        "errorPopup": ErrorComponent,
     },
     data() {
         return {
@@ -141,7 +141,7 @@ export default {
             this.$refs.popupComponent.showPopup();
         },
         showErreur() {
-            this.$refs.erreurComponent.showPopup();
+            this.$refs.errorComponent.showPopup();
         },
     },
 };

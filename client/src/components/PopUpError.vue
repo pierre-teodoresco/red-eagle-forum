@@ -1,13 +1,17 @@
 <template>
     <div>
         <div v-if="showingPopup" class="popup">
-            Topic créé avec succès !
+            {{ message }}
         </div>
     </div>
 </template>
   
 <script>
 export default {
+    props: {
+        message: String
+    },
+
     data() {
         return {
             showingPopup: false
@@ -38,8 +42,7 @@ export default {
 }
 
 .popup {
-    background: green;
-    /* Fond vert */
+    background: red;
     color: white;
     /* Texte blanc */
     padding: 10px;
