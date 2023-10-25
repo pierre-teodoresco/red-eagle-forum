@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header :user="user" :currentPage="pageName" />
+        <Header :user="user" />
         <!-- Display validation popup when showValidation is true -->
         <PopupComponent :showPopup="showValidation" message="Topic created with success!" bgColor="bg-green-500" />
 
@@ -70,7 +70,6 @@ export default {
     data() {
         return {
             // Header
-            pageName: 'Create Topic',                       // Name of the current page
             user: null,                                     // User
 
             // Form

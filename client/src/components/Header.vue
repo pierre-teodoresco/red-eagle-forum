@@ -29,7 +29,6 @@
 export default {
     props: {
         user: Object,      // Pass the user object as a prop
-        currentPage: String,
     },
     methods: {
         async logout() {
@@ -54,7 +53,11 @@ export default {
             }
 
             // Refresh the page
-            this.$router.go();
+            if (this.$router.currentRoute.path === '/') {
+                this.$router.go();
+            } else {
+                this.$router.push('/');
+            }
         },
     },
 };

@@ -1,7 +1,7 @@
 <!-- src/views/Home.vue -->
 <template>
     <div>
-        <Header :user="user" :currentPage="pageName" />
+        <Header :user="user" />
     </div>
     <!-- Affichez la liste de tous les topics dispo dans la bd -->
     <div>
@@ -38,7 +38,6 @@ export default {
     },
     data() {
         return {
-            pageName: 'Home',             // Name of the current page
             user: null,                   // User's username
         }
     },
