@@ -1,6 +1,11 @@
 <template>
     <div>
         <Header :user="user" :currentPage="pageName" />
+        <!-- Display validation popup when showValidation is true -->
+        <PopupComponent :showPopup="showValidation" message="Topic created with success!" bgColor="bg-green-500" />
+
+        <!-- Display error popup when showError is true -->
+        <PopupComponent :showPopup="showError" message="Error during topic creation!" bgColor="bg-red-500" />
     </div>
     <div class="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
@@ -10,13 +15,13 @@
                 </h2>
             </div>
             <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <!-- Form to Update User Information -->
-                <form @submit.prevent="createTopic">
+                <!-- Form to create a new topic -->
+                <form ref="creationTopicForm" @submit.prevent="createTopic">
                     <div class="mb-4">
                         <label for="title" class="block text-gray-700 text-sm font-bold mb-2">
                             Title
                         </label>
-                        <input id="title" name="title" type="text"
+                        <input id="title" name="title" type="text" required
                             class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                             placeholder="Topic title">
                     </div>
@@ -30,7 +35,6 @@
                             placeholder="Topic description" rows="4"></textarea>
                     </div>
 
-
                     <div class="mb-4">
                         <label for="image" class="block text-gray-700 text-sm font-bold mb-2">
                             Image
@@ -42,8 +46,10 @@
                             class="bg-indigo-400 text-white px-2 py-2 rounded-full hover:bg-indigo-600 cursor-pointer">
                             Choisir un fichier
                         </button>
-                    </div>
 
+                        <!-- Display selected image -->
+                        <img v-if="selectedImage" :src="selectedImage" alt="Selected Image" class="mt-2 rounded-md">
+                    </div>
 
                     <div>
                         <button type="submit"
@@ -65,34 +71,37 @@
             </div>
         </div>
     </div>
-    <popup-component :message=validation ref="popupComponent"></popup-component>
-    <error-popup :message=error ref="errorPopup"></error-popup>
 </template>
   
 <script>
 import Header from '../components/Header.vue';
 import UserServices from '../services/UserServices.js'
-import PopupComponent from "../components/PopUpValidation.vue";
-import ErrorComponent from "../components/PopUpError.vue";
+import PopupComponent from "../components/PopUpMessage.vue";
 
 export default {
     components: {
         Header,
-        "popupComponent": PopupComponent,
-        "errorPopup": ErrorComponent,
+        PopupComponent,
     },
     data() {
         return {
-            validation:"Topic crée avec succès",
-            error:"Erreur lors de la création du topic",
-            pageName: 'Create Topic',      // Name of the current page
-            user: null,                   // User's username
-            title: '',                    // Champ de saisie pour le titre
-            description: '',              // Champ de saisie pour la description
-            selectedImage: null           // Champ pour afficher l'image sélectionnée
+            // Header
+            pageName: 'Create Topic',                       // Name of the current page
+            user: null,                                     // User
+
+            // Form
+            title: '',                                      // Title input field
+            description: '',                                // Description input field
+            selectedImage: null,                            // Selected image
+
+            // PopUp's
+            timeout: 2000,                                  // Time to display the popup
+            showValidation: false,                          // Show the validation popup
+            showError: false,                               // Show the error popup
         }
     },
     async mounted() {
+        // User logged in ?
         try {
             // Check if the user is logged in
             const data = await UserServices.isLoggedIn();
@@ -102,7 +111,7 @@ export default {
         }
     },
     methods: {
-        async createTopic() {
+        createTopic() {
             try {
                 // Faire requete POST pour créer un topic dans la bd
                 // const response = await TopicServices.createTopic({
@@ -111,19 +120,29 @@ export default {
                 //     image: this.selectedImage
                 // });
 
-                const response = true;    //pour tester
+                // Debug
+                const response = true;
 
-                if (response) {                 // si la création du topic fonctionne alors afficher le popup et rediriger vers la page home
-                    this.showPopup();
-                    //attendre fin du popup et rediriger vers la page Home.vue
+                if (response) {
+                    // If the topic creation succeeds, display a green popup and redirect to the Home page
+                    this.showValidation = true;
                     setTimeout(() => {
                         this.$router.push("/");
-                    }, 2000);
+                    }, this.timeout);
                 } else {
-                    this.showErreur();
+                    // If the topic creation fails, display a red popup
+                    this.showError = true;
                 }
+
+                // Reset form
+                this.$refs.creationTopicForm.reset();
             } catch (error) {
                 console.log(error);
+            } finally {
+                // Clear form
+                this.title = '';
+                this.description = '';
+                this.selectedImage = null;
             }
         },
 
@@ -138,12 +157,6 @@ export default {
                 // Faire quelque chose avec le fichier, par exemple l'afficher dans une image
                 this.selectedImage = URL.createObjectURL(file); // Stocker l'URL de l'image
             }
-        },
-        showPopup() {
-            this.$refs.popupComponent.showPopup();
-        },
-        showErreur() {
-            this.$refs.errorComponent.showPopup();
         },
     },
 };
