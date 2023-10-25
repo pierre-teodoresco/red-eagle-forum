@@ -21,7 +21,7 @@
                         <label for="title" class="block text-gray-700 text-sm font-bold mb-2">
                             Title
                         </label>
-                        <input id="title" name="title" type="text" require v-model="title"
+                        <input id="title" name="title" type="text" required v-model="title"
                             class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                             placeholder="Topic title">
                     </div>
@@ -30,7 +30,7 @@
                         <label for="description" class="block text-gray-700 text-sm font-bold mb-2">
                             Description
                         </label>
-                        <textarea id="description" name="description" require v-model="description"
+                        <textarea id="description" name="description" required v-model="description"
                             class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm resize-vertical"
                             placeholder="Topic description" rows="4"></textarea>
                     </div>
@@ -93,38 +93,46 @@ export default {
         }
     },
     methods: {
-        createTopic() {
+        async createTopic() {
             try {
-                // Faire requete POST pour créer un topic dans la bd
-                // const response = await TopicServices.createTopic({
-                //     title: this.title,
-                //     description: this.description,
-                //     image: this.selectedImage
-                // });
+                // Send a request to the server to create a new topic
+                const response = await fetch('/topic', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        label: this.title,
+                        description: this.description,
+                        creationUser: this.user.username,
+                        creationDate: null,
+                    }),
+                });
 
-                // Debug
-                const response = true;
+                // Get the data from the backend response
+                const responseData = await response.json();
 
-                if (response) {
-                    // If the topic creation succeeds, display a green popup and redirect to the Home page
-                    this.showValidation = true;
-                    setTimeout(() => {
-                        this.$router.push("/");
-                    }, this.timeout);
-                } else {
-                    // If the topic creation fails, display a red popup
-                    this.showError = true;
+                if (!response.ok) {
+                    // The request failed
+                    throw new Error(responseData.error || 'Topic creation failed');
                 }
+                
+                // If the topic creation succeeds, display a green popup and redirect to the Home page
+                this.showValidation = true;
+                setTimeout(() => {
+                    this.$router.push("/");
+                }, this.timeout);
 
                 // Reset form
                 this.$refs.creationTopicForm.reset();
             } catch (error) {
+                // handle error
+                this.showError = true;
                 console.log(error);
             } finally {
                 // Clear form
                 this.title = '';
                 this.description = '';
-                this.selectedImage = null;
             }
         },
     },
