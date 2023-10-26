@@ -126,7 +126,7 @@ export default {
             // Check if the user is logged in
             const data = await UserServices.isLoggedIn();
 
-            if (!data.isLoggedIn) {
+            if (!data.isLoggedIn || data.user.username !== this.$route.params.username) {
                 this.$router.push('/login');
                 return;
             }
