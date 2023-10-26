@@ -11,7 +11,7 @@
             </nav>
             <div class="flex items-center">
                 <div v-if="user" class="text-white space-x-4">
-                    <router-link :to="`/${user.username}`" class="text-white hover:text-gray-300">{{ user.username }}</router-link>
+                    <router-link :to="`/profile/${user.username}`" class="text-white hover:text-gray-300">{{ user.username }}</router-link>
                     <button @click="logout" class="text-white hover:text-gray-300">
                         Logout
                     </button>

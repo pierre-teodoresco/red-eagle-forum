@@ -5,6 +5,7 @@ import Register from '../views/Register.vue';
 import Login from '../views/Login.vue';
 import Profile from '../views/Profile.vue';
 import CreateTopic from '../views/CreateTopic.vue';
+import Topic from '../views/Topic.vue';
 
 const routes = [
     {
@@ -23,7 +24,7 @@ const routes = [
         component: Login,
     },
     {
-        path: '/:username',
+        path: '/profile/:username',
         name: 'Profile',
         component: Profile,
     },
@@ -31,12 +32,18 @@ const routes = [
         path:'/create-topic',
         name:'CreateTopic',
         component: CreateTopic,
+    },
+    {
+        path:'/topic/feed/:label',
+        name:'Topic',
+        component: Topic,
     }
 ];
 
 const router = createRouter({
     history: createWebHistory(),
     routes,
+    base: '/',
 });
 
 export default router;
