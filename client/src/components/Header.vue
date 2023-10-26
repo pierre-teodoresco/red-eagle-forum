@@ -53,11 +53,11 @@ export default {
             }
 
             // Refresh the page
-            if (this.$router.currentRoute.path === '/') {
-                this.$router.go();
-            } else {
-                this.$router.push('/');
-            }
+            if (!this.$router.currentRoute.path === '/') {
+                this.$router.push('/');  
+            } 
+
+            this.$router.go();
         },
     },
 };

@@ -16,7 +16,7 @@
             </div>
             <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <!-- Form to Update User Information -->
-                <form @submit.prevent="createTopic">
+                <form @submit.prevent="createTopic" ref="CreationTopicForm">
                     <div class="mb-4">
                         <label for="title" class="block text-gray-700 text-sm font-bold mb-2">
                             Title
@@ -88,6 +88,12 @@ export default {
             // Check if the user is logged in
             const data = await UserServices.isLoggedIn();
             this.user = data.user;
+
+            if (!this.user) {
+                // Redirect to the login page
+                this.$router.push("/login");
+            }
+
         } catch (error) {
             console.log(error);
         }
@@ -124,7 +130,7 @@ export default {
                 }, this.timeout);
 
                 // Reset form
-                this.$refs.creationTopicForm.reset();
+                this.$refs.CreationTopicForm.reset();
             } catch (error) {
                 // handle error
                 this.showError = true;
