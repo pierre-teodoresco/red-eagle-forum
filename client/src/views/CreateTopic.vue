@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header :user="user" :currentPage="pageName" />
+        <Header :user="user" />
         <!-- Display validation popup when showValidation is true -->
         <PopupComponent :showPopup="showValidation" message="Topic created with success!" bgColor="bg-green-500" />
 
@@ -15,13 +15,13 @@
                 </h2>
             </div>
             <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <!-- Form to create a new topic -->
-                <form ref="creationTopicForm" @submit.prevent="createTopic">
+                <!-- Form to Update User Information -->
+                <form @submit.prevent="createTopic" ref="CreationTopicForm">
                     <div class="mb-4">
                         <label for="title" class="block text-gray-700 text-sm font-bold mb-2">
                             Title
                         </label>
-                        <input id="title" name="title" type="text" required
+                        <input id="title" name="title" type="text" required v-model="title"
                             class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                             placeholder="Topic title">
                     </div>
@@ -30,25 +30,9 @@
                         <label for="description" class="block text-gray-700 text-sm font-bold mb-2">
                             Description
                         </label>
-                        <textarea id="description" name="description"
+                        <textarea id="description" name="description" required v-model="description"
                             class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm resize-vertical"
                             placeholder="Topic description" rows="4"></textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="image" class="block text-gray-700 text-sm font-bold mb-2">
-                            Image
-                        </label>
-                        <input id="image" name="image" type="file" accept="image/*"
-                            class="appearance-none rounded-none relative block w-full px-2 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                            @change="handleImageChange" ref="imageInput" style="display:none;">
-                        <button type="button" @click="openFileInput"
-                            class="bg-indigo-400 text-white px-2 py-2 rounded-full hover:bg-indigo-600 cursor-pointer">
-                            Choisir un fichier
-                        </button>
-
-                        <!-- Display selected image -->
-                        <img v-if="selectedImage" :src="selectedImage" alt="Selected Image" class="mt-2 rounded-md">
                     </div>
 
                     <div>
@@ -86,13 +70,11 @@ export default {
     data() {
         return {
             // Header
-            pageName: 'Create Topic',                       // Name of the current page
             user: null,                                     // User
 
             // Form
             title: '',                                      // Title input field
             description: '',                                // Description input field
-            selectedImage: null,                            // Selected image
 
             // PopUp's
             timeout: 2000,                                  // Time to display the popup
@@ -106,56 +88,57 @@ export default {
             // Check if the user is logged in
             const data = await UserServices.isLoggedIn();
             this.user = data.user;
+
+            if (!this.user) {
+                // Redirect to the login page
+                this.$router.push("/login");
+            }
+
         } catch (error) {
             console.log(error);
         }
     },
     methods: {
-        createTopic() {
+        async createTopic() {
             try {
-                // Faire requete POST pour créer un topic dans la bd
-                // const response = await TopicServices.createTopic({
-                //     title: this.title,
-                //     description: this.description,
-                //     image: this.selectedImage
-                // });
+                // Send a request to the server to create a new topic
+                const response = await fetch('/topic', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        label: this.title,
+                        description: this.description,
+                        creationUser: this.user.username,
+                        creationDate: null,
+                    }),
+                });
 
-                // Debug
-                const response = true;
+                // Get the data from the backend response
+                const responseData = await response.json();
 
-                if (response) {
-                    // If the topic creation succeeds, display a green popup and redirect to the Home page
-                    this.showValidation = true;
-                    setTimeout(() => {
-                        this.$router.push("/");
-                    }, this.timeout);
-                } else {
-                    // If the topic creation fails, display a red popup
-                    this.showError = true;
+                if (!response.ok) {
+                    // The request failed
+                    throw new Error(responseData.error || 'Topic creation failed');
                 }
+                
+                // If the topic creation succeeds, display a green popup and redirect to the Home page
+                this.showValidation = true;
+                setTimeout(() => {
+                    this.$router.push("/");
+                }, this.timeout);
 
                 // Reset form
-                this.$refs.creationTopicForm.reset();
+                this.$refs.CreationTopicForm.reset();
             } catch (error) {
+                // handle error
+                this.showError = true;
                 console.log(error);
             } finally {
                 // Clear form
                 this.title = '';
                 this.description = '';
-                this.selectedImage = null;
-            }
-        },
-
-        openFileInput() {
-            // Simuler un clic sur l'élément d'entrée de fichier pour ouvrir la boîte de dialogue de sélection de fichier
-            this.$refs.imageInput.click();
-        },
-        handleImageChange(event) {
-            // Gérer le changement d'image lorsqu'un fichier est sélectionné
-            const file = event.target.files[0]; // Obtenir le fichier sélectionné
-            if (file) {
-                // Faire quelque chose avec le fichier, par exemple l'afficher dans une image
-                this.selectedImage = URL.createObjectURL(file); // Stocker l'URL de l'image
             }
         },
     },

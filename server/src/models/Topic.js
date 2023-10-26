@@ -3,10 +3,23 @@ import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 const Topic = mongoose.model('Topic', {
-    label: String,
-    image: String,
+    label: {
+        type: String,
+        unique: true,
+        required: true,
+        trim: true
+    },
+    description: {
+        type: String,
+        required: true,
+        trim: true
+    },
     creationDate: Date,
-    creationUser: String,
+    creationUser: {
+        type: String,
+        required: true,
+        trim: true,
+    },
 });
 
 const TopicModel = {
@@ -17,7 +30,7 @@ const TopicModel = {
     insert: async (topic) => {
         const newTopic = new Topic({
             label: topic.label,
-            image: topic.image,
+            description: topic.description,
             creationDate: topic.creationDate,
             creationUser: topic.creationUser,
         });
@@ -42,7 +55,7 @@ const TopicModel = {
 
         const newTopic = new Topic({
             label: topic.label,
-            image: topic.image,
+            description: topic.description,
             creationDate: topic.creationDate,
             creationUser: topic.creationUser,
         });

@@ -24,10 +24,12 @@ const topicController = {
             // Si le sujet n'existe pas, créez-le
             const newTopic = {
                 label: req.body.label,
-                image: req.body.image,
-                creationDate: req.body.creationDate,
+                description: req.body.description,
+                creationDate: new Date(),
                 creationUser: req.body.creationUser,
             };
+
+            console.log("newTopic = ", newTopic);
     
             // Utilisez le modèle pour créer un nouveau sujet
             await Topic.insert(newTopic);
@@ -106,9 +108,7 @@ const topicController = {
 
             // Mettez à jour les champs du sujet avec les nouvelles données du corps de la requête
             existingTopic.label = req.body.label || existingTopic.label;
-            existingTopic.image = req.body.image || existingTopic.image;
-            existingTopic.creationDate = req.body.creationDate || existingTopic.creationDate;
-            existingTopic.creationUser = req.body.creationUser || existingTopic.creationUser;
+            existingTopic.description = req.body.description || existingTopic.description;
 
             // Enregistrez les modifications dans la base de données ou le système de stockage
             await Topic.save(existingTopic);

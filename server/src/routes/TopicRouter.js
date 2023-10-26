@@ -10,5 +10,4 @@ router.get('/:label', topicController.findOne);
 router.delete('/:label', topicController.delete);
 router.put('/', topicController.update);
 
-
 export default router;

@@ -1,29 +1,24 @@
-<!-- src/views/Home.vue -->
 <template>
-    <div>
-        <Header :user="user" :currentPage="pageName" />
-    </div>
-    <!-- Affichez la liste de tous les topics dispo dans la bd -->
-    <div>
-        <!--Utiliser la méthode getAllTopics() pour afficher dans la page tous les topics-->
-        
-
-    </div>
-    <div>
-        <!-- Affichez le bouton "Créer un Topic" si l'utilisateur est connecté -->
-        <div class="h-screen flex flex-col justify-center items-center">
-            <router-link v-if="user" to="/create-topic"
-                class="group relative w-50 flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                <span class="flex items-center">
-                    Créer un nouveau topic
-                    <svg class="h-5 w-5 text-blue-500 group-hover:text-blue-400 ml-2" xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd"
-                            d="M10 2a3 3 0 00-3 3v2H4a2 2 0 00-2 2v9a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-3V5a3 3 0 00-3-3zM7 5v2h6V5a1 1 0 00-1-1H8a1 1 0 00-1 1zm6 10H7v-3h6v3z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </span>
-            </router-link>
+    <div class="bg-gray-100 min-h-screen">
+        <Header :user="user" />
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div class="px-4 py-6 sm:px-0">
+                <div class="flex justify-between items-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">All Topics</h1>
+                    <router-link to="/create-topic"
+                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Create a new topic
+                    </router-link>
+                </div>
+                <div class="grid gap-6">
+                    <div v-for="topic in topics" :key="topic.label" class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-4 py-5 sm:p-6">
+                            <h2 class="text-xl font-bold text-gray-900 mb-2">{{ topic.label }}</h2>
+                            <p class="text-gray-500">{{ topic.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -38,8 +33,8 @@ export default {
     },
     data() {
         return {
-            pageName: 'Home',             // Name of the current page
             user: null,                   // User's username
+            topics: [],                   // List of all topics
         }
     },
     async mounted() {
@@ -48,8 +43,6 @@ export default {
             const data = await UserServices.isLoggedIn();
             this.user = data.user;
 
-            // A l'initialisation de la page
-            // Faire requête GET pour avoir tous les topics dans la bd + les afficher dans la page
             this.getAllTopics();
 
         } catch (error) {
@@ -57,10 +50,26 @@ export default {
         }
     },
     methods: {
-        // Requête bd pour avoir tous les topics
         async getAllTopics() {
             try {
-                // A faire 
+                // Get all topics
+                const response = await fetch('/topic', {
+                    method: 'GET',
+                });
+
+                const responseData = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(responseData.error || 'Something went wrong');
+                }
+
+                this.topics = responseData.topics;
+
+                // Sort the topics by creation date (the sooner, the first)
+                this.topics.sort((a, b) => {
+                    return new Date(b.creationDate) - new Date(a.creationDate);
+                });
+                
 
             } catch (error) {
                 console.log(error);
