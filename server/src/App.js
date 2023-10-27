@@ -11,6 +11,7 @@ import session from 'express-session';
 
 import userRouter from './routes/UserRouter.js';
 import topicRouter from './routes/TopicRouter.js';
+import messageRouter from './routes/MessageRouter.js';
 
 const app = express();
 const port = process.env.PORT;
@@ -47,6 +48,7 @@ db.once('open', () => {
 /* Routes */
 app.use('/user', userRouter);
 app.use('/topic', topicRouter);
+app.use('/message', messageRouter);
 
 /* Middlewares */
 

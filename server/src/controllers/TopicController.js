@@ -1,11 +1,5 @@
 // TopicController.js
-
-import dotenv from 'dotenv';
-dotenv.config();
-
 import Topic from '../models/Topic.js';
-import jwt from 'jsonwebtoken';
-import Service from '../services/service.js';
 
 const topicController = {
     /**
