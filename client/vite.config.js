@@ -8,6 +8,7 @@ export default defineConfig({
         proxy: {
             '/user': 'http://localhost:3000',
             '/topic': 'http://localhost:3000',
+            '/message': 'http://localhost:3000',
         },
     },
 })

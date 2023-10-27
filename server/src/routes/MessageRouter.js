@@ -4,7 +4,7 @@ import messageController from '../controllers/MessageController.js';
 
 const router = express.Router();
 
-router.get('/:topic', messageController.findAll);
+router.get('/:label', messageController.findAll);
 router.post('/', messageController.create);
 
 export default router;

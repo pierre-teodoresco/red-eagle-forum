@@ -40,7 +40,7 @@ const MessageModel = {
      * @param {String} topic
      */
     getFromTopic: async (topic) => {
-        return Message.findAll({ topic: topic });
+        return await Message.find({ topic: topic });
     },
 
     /**

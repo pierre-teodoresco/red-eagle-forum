@@ -13,6 +13,7 @@
                 <p class="text-sm text-gray-500">{{ message.creationUser }} - {{ message.creationDate }}</p>
             </div>
         </div>
+
         <div v-else>
             <p class="text-gray-500">No messages available.</p>
         </div>
@@ -47,7 +48,7 @@ export default {
         return {
             user: null,
             topic: null,
-            messages: null,
+            messages: [],
             newMessage: '',
         };
     },
@@ -87,15 +88,20 @@ export default {
             try {
                 const response = await fetch(`/message/${this.topic.label}`, {
                     method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                 });
 
                 const responseData = await response.json();
-                
+
                 if (!response.ok) {
                     throw new Error(responseData.error || 'Internal server error');
                 }
 
+                console.log(responseData);
                 this.messages = responseData.messages;
+                
             } catch (error) {
                 console.error('Error getting messages: ', error);
             }
@@ -114,7 +120,9 @@ export default {
                         creationUser: this.user.username,
                     }),
                 });
-                
+
+                //console.log(message);
+
                 const responseData = await response.json();
 
                 if (!response.ok) {

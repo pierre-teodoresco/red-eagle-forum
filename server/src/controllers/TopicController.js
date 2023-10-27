@@ -21,10 +21,7 @@ const topicController = {
                 description: req.body.description,
                 creationDate: new Date(),
                 creationUser: req.body.creationUser,
-            };
-
-            console.log("newTopic = ", newTopic);
-    
+            };    
             // Utilisez le modèle pour créer un nouveau sujet
             await Topic.insert(newTopic);
     
@@ -38,9 +35,7 @@ const topicController = {
     findOne: async (req, res) => {
         try {
             const label = req.params.label;
-            console.log("label = ", label);
             const topic = await Topic.findOne({ label: label });
-            console.log("topic = ", topic);
             if (topic) {
                 res.status(200).json({ message: 'Topic found successfully', topic });
             } else {
@@ -94,8 +89,6 @@ const topicController = {
 
             // Vérifiez si le sujet existe en fonction de la valeur du champ 'label'
             const existingTopic = await Topic.findOne({label: label});
-            console.log("existingTopic = ", existingTopic);
-
             if (!existingTopic) {
                 return res.status(404).json({ error: 'Topic not found' });
             }
