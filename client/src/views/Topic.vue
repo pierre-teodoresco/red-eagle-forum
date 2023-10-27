@@ -4,13 +4,13 @@
     </div>
 
     <div v-if="topic" class="max-w-4xl mx-auto py-8">
-        <h1 class="text-3xl font-semibold mb-6">{{topic.label}}</h1>
+        <h1 class="text-3xl font-semibold mb-6">{{ topic.label }}</h1>
 
         <!-- Display Messages -->
-        <div v-if="messages.length">
-            <div v-for="message in messages" :key="message.id" class="mb-4 p-4 border rounded">
+        <div v-if="messages">
+            <div v-for="message in messages" :key="message._id" class="mb-4 p-4 border rounded">
                 <p class="text-gray-800">{{ message.content }}</p>
-                <p class="text-sm text-gray-500">{{ message.author }} - {{ message.createdAt }}</p>
+                <p class="text-sm text-gray-500">{{ message.creationUser }} - {{ message.creationDate }}</p>
             </div>
         </div>
         <div v-else>
@@ -21,7 +21,7 @@
         <div v-if="user">
             <h2 class="text-xl font-semibold mt-8 mb-4">Post a Message</h2>
             <form @submit.prevent="postMessage" class="mb-4">
-                <textarea v-model="newMessage" rows="4" placeholder="Type your message here..."
+                <textarea v-model="newMessage" rows="4" placeholder="Type your message here..." required
                     class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-indigo-500"></textarea>
                 <button type="submit"
                     class="mt-2 bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 focus:outline-none focus:ring focus:border-indigo-500">
@@ -47,11 +47,7 @@ export default {
         return {
             user: null,
             topic: null,
-            messages: [
-                { id: 1, content: 'First message', author: 'John Doe', createdAt: '2 hours ago' },
-                { id: 2, content: 'Another message', author: 'Jane Doe', createdAt: '1 hour ago' },
-                // Add more sample messages
-            ],
+            messages: null,
             newMessage: '',
         };
     },
@@ -82,26 +78,57 @@ export default {
         } catch (error) {
             console.error('Error getting topic: ', error);
         }
+
+        this.getMessages();
     },
     methods: {
-        postMessage() {
-            if (!this.newMessage.trim()) {
-                // Don't post empty messages
-                return;
+        async getMessages() {
+            // Get the messages from the server
+            try {
+                const response = await fetch(`/message/${this.topic.label}`, {
+                    method: 'GET',
+                });
+
+                const responseData = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(responseData.error || 'Internal server error');
+                }
+
+                this.messages = responseData.messages;
+            } catch (error) {
+                console.error('Error getting messages: ', error);
             }
+        },
+        async postMessage() {
+            try {
+                // Send the message to the server
+                const response = await fetch('/message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        topic: this.topic.label,
+                        content: this.newMessage,
+                        creationUser: this.user.username,
+                    }),
+                });
+                
+                const responseData = await response.json();
 
-            // Add the new message to the list (replace with actual API call)
-            const newMessage = {
-                id: this.messages.length + 1,
-                content: this.newMessage,
-                author: this.user.username, // Assuming username is available in user data
-                createdAt: 'just now', // Replace with actual timestamp
-            };
+                if (!response.ok) {
+                    throw new Error(responseData.error || 'Internal server error');
+                }
 
-            this.messages.unshift(newMessage);
-
-            // Clear the input field
-            this.newMessage = '';
+                // Refresh the messages
+                this.getMessages();
+            } catch (error) {
+                console.error('Error posting message: ', error);
+            } finally {
+                // Clear the input field
+                this.newMessage = '';
+            }
         },
     },
 };
