@@ -52,3 +52,4 @@ const MessageModel = {
     },
 };
 
+export default MessageModel;
