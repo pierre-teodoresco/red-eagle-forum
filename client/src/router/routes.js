@@ -6,6 +6,7 @@ import Login from '../views/Login.vue';
 import Profile from '../views/Profile.vue';
 import CreateTopic from '../views/CreateTopic.vue';
 import Topic from '../views/Topic.vue';
+import PageNotFound from '../views/PageNotFound.vue';
 
 const routes = [
     {
@@ -37,7 +38,11 @@ const routes = [
         path:'/topic/feed/:label',
         name:'Topic',
         component: Topic,
-    }
+    },
+    {
+        path: '/:catchAll(.*)',
+        component: PageNotFound
+    },
 ];
 
 const router = createRouter({
