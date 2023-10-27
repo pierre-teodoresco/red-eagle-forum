@@ -3,7 +3,7 @@
     <header class="bg-indigo-600 p-4">
         <div class="container mx-auto flex items-center justify-between">
             <div class="flex items-center">
-                <img src="../../img/RedEagleIcon.png" alt="" class="h-15 w-12 mr-2">
+                <img src="/RedEagleIcon.png" alt="" class="h-15 w-12 mr-2">
                 <router-link to="/" class="text-white text-lg font-semibold hover:text-gray-300">Red Eagle Forum</router-link>
             </div>
             <nav class="space-x-4">

@@ -13,7 +13,7 @@
                 <div class="grid gap-6">
                     <div v-for="topic in topics" :key="topic.label" class="bg-white overflow-hidden shadow rounded-lg">
                         <div class="px-4 py-5 sm:p-6">
-                            <router-link :to="`/topic/feed/${topic.label}`" class="text-xl font-bold text-gray-900 mb-2">{{ topic.label }}</router-link>
+                            <router-link :to="`/feed/${topic.label}`" class="text-xl font-bold text-gray-900 mb-2">{{ topic.label }}</router-link>
                             <p class="text-gray-500">{{ topic.description }}</p>
                         </div>
                     </div>

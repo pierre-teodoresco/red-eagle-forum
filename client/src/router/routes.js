@@ -35,7 +35,7 @@ const routes = [
         component: CreateTopic,
     },
     {
-        path:'/topic/feed/:label',
+        path:'/feed/:label',
         name:'Topic',
         component: Topic,
     },
