@@ -7,19 +7,24 @@
         <h1 class="text-3xl font-semibold mb-6">{{ topic.label }}</h1>
 
         <!-- Display Messages -->
-        <div v-if="messages">
-            <div v-for="message in messages" :key="message._id" class="mb-4 p-4 border rounded">
-                <p class="text-gray-800">{{ message.content }}</p>
-                <p class="text-sm text-gray-500">{{ message.creationUser }} - {{ message.creationDate }}</p>
+        <transition-group name="message-slide-in" tag="div">
+            <div v-if="messagesLoaded && messages.length > 0">
+                <div v-for="message in messages" :key="message._id" class="message-item">
+                    <div class="mb-4 p-4 border rounded">
+                        <p class="text-gray-800">{{ message.content }}</p>
+                        <p class="text-sm text-gray-500">
+                            {{ message.creationUser }} - {{ formatDate(message.creationDate) }}
+                        </p>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div v-else>
-            <p class="text-gray-500">No messages available.</p>
-        </div>
+            <div v-else>
+                <p class="text-gray-500" v-show="messagesLoaded">No messages available.</p>
+            </div>
+        </transition-group>
 
         <!-- Post Message Form (visible if user is connected) -->
-        <div v-if="user">
+        <div v-if="user && messagesLoaded">
             <h2 class="text-xl font-semibold mt-8 mb-4">Post a Message</h2>
             <form @submit.prevent="postMessage" class="mb-4">
                 <textarea v-model="newMessage" rows="4" placeholder="Type your message here..." required
@@ -31,14 +36,17 @@
             </form>
         </div>
         <div v-else>
-            <p class="text-gray-500">Login to post messages.</p>
+            <p class="text-gray-500" v-show="messagesLoaded">Login to post messages.</p>
         </div>
     </div>
 </template>
   
+  
+  
 <script>
 import Header from '../components/Header.vue';
 import UserServices from '../services/UserServices.js';
+import { formatDistanceToNow } from 'date-fns';
 
 export default {
     components: {
@@ -50,6 +58,7 @@ export default {
             topic: null,
             messages: [],
             newMessage: '',
+            messagesLoaded: false, // Track if messages are loaded
         };
     },
     async mounted() {
@@ -89,7 +98,7 @@ export default {
                 const response = await fetch(`/message/${this.topic.label}`, {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application.json',
                     },
                 });
 
@@ -99,9 +108,8 @@ export default {
                     throw new Error(responseData.error || 'Internal server error');
                 }
 
-                console.log(responseData);
                 this.messages = responseData.messages;
-                
+                this.messagesLoaded = true; // Messages are loaded
             } catch (error) {
                 console.error('Error getting messages: ', error);
             }
@@ -121,8 +129,6 @@ export default {
                     }),
                 });
 
-                //console.log(message);
-
                 const responseData = await response.json();
 
                 if (!response.ok) {
@@ -138,6 +144,46 @@ export default {
                 this.newMessage = '';
             }
         },
+        formatDate(date) {
+            const currentDate = new Date();
+            const messageDate = new Date(date);
+            const timeDifference = currentDate - messageDate;
+
+            if (timeDifference < 60000) {
+                return 'just now';
+            } else {
+                return formatDistanceToNow(new Date(date), { addSuffix: true });
+            }
+        },
     },
 };
 </script>
+<style>
+.message-slide-in-enter-active,
+.message-slide-in-leave-active {
+    transition: opacity 1.5s, transform 1.5s;
+}
+
+.message-slide-in-enter,
+.message-slide-in-leave-to {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.message-item {
+    animation: slide-in 1s;
+}
+
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+  
