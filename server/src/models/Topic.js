@@ -1,6 +1,5 @@
 // Topic.js
 import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 
 const Topic = mongoose.model('Topic', {
     label: {
@@ -51,7 +50,6 @@ const TopicModel = {
 
     update: async (topic) => {
         const topic2 = await Topic.findOne(label);
-        console.log("topic = ", topic2);
 
         const newTopic = new Topic({
             label: topic.label,
@@ -69,7 +67,6 @@ const TopicModel = {
      * @returns {string || null} depending on whether the topic is found or not
      */
     findOne: async (label) => {
-        console.log("Model label = ", label);
         return await Topic.findOne(label);
     },
 
