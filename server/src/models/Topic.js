@@ -1,25 +1,7 @@
 // Topic.js
-import mongoose from 'mongoose';
+import { PrismaClient } from '@prisma/client';
 
-const Topic = mongoose.model('Topic', {
-    label: {
-        type: String,
-        unique: true,
-        required: true,
-        trim: true
-    },
-    description: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    creationDate: Date,
-    creationUser: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-});
+const prisma = new PrismaClient();
 
 const TopicModel = {
     /**
@@ -27,38 +9,38 @@ const TopicModel = {
      * @param {JSON} topic 
      */
     insert: async (topic) => {
-        const newTopic = new Topic({
-            label: topic.label,
-            description: topic.description,
-            creationDate: topic.creationDate,
-            creationUser: topic.creationUser,
+        await prisma.topic.create({
+            data: {
+                label: topic.label,
+                description: topic.description,
+                creationDate: topic.creationDate,
+                creationUser: topic.creationUser,
+            },
         });
-
-        await newTopic.save();
     },
 
     save: async (topic) => {
-        // const newTopic = new Topic({
-        //     label: topic.label,
-        //     image: topic.image,
-        //     creationDate: topic.creationDate,
-        //     creationUser: topic.creationUser,
-        // });
-
-        await topic.save();
+        await prisma.topic.update({
+            where: { id: topic.id },
+            data: {
+                label: topic.label,
+                description: topic.description,
+                creationDate: topic.creationDate,
+                creationUser: topic.creationUser,
+            },
+        });
     },
 
     update: async (topic) => {
-        const topic2 = await Topic.findOne(label);
-
-        const newTopic = new Topic({
-            label: topic.label,
-            description: topic.description,
-            creationDate: topic.creationDate,
-            creationUser: topic.creationUser,
+        await prisma.topic.update({
+            where: { label: topic.label },
+            data: {
+                label: topic.label,
+                description: topic.description,
+                creationDate: topic.creationDate,
+                creationUser: topic.creationUser,
+            },
         });
-
-        await newTopic.updateOne(newTopic);
     },
 
     /**
@@ -67,15 +49,21 @@ const TopicModel = {
      * @returns {string || null} depending on whether the topic is found or not
      */
     findOne: async (label) => {
-        return await Topic.findOne(label);
+        return await prisma.topic.findUnique({
+            where: { label },
+        });
     },
 
     getAllTopicsWithLimit: async (limit) => {
-        return await Topic.find().limit(parseInt(limit));
+        return await prisma.topic.findMany({
+            take: parseInt(limit),
+        });
     },
 
     delete: async (label) => {
-        await Topic.deleteOne(label);
+        await prisma.topic.delete({
+            where: { label },
+        });
     },
 };
 

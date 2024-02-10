@@ -5,6 +5,9 @@ dotenv.config();
 
 import argon2 from 'argon2';
 
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient();
+
 export default {
     /**
      * @brief creates a session for the user
@@ -43,4 +46,18 @@ export default {
             throw error;
         }
     },
+    /**
+     * @brief prisma error handler
+     */
+    async prismaErrorHandler(error) {
+        console.error('Prisma error:', error);
+        await prisma.$disconnect();
+        process.exit(1);
+    },
+    /**
+     * @brief prisma end query
+     */
+    async prismaEnd() {
+        await prisma.$disconnect();
+    }
 }

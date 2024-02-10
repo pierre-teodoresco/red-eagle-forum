@@ -1,23 +1,6 @@
 // Message.js
-import mongoose from 'mongoose';
-
-const Message = mongoose.model('Message', {
-    topic: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    content: {
-        type: String,
-        trim: true
-    },
-    creationDate: Date,
-    creationUser: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-});
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 const MessageModel = {
     /**
@@ -25,14 +8,14 @@ const MessageModel = {
      * @param {JSON} message 
      */
     insert: async (message) => {
-        const newMessage = new Message({
-            topic: message.topic,
-            content: message.content,
-            creationDate: message.creationDate,
-            creationUser: message.creationUser,
+        await prisma.message.create({
+            data: {
+                topic: message.topic,
+                content: message.content,
+                creationDate: message.creationDate,
+                creationUser: message.creationUser,
+            },
         });
-
-        await newMessage.save();
     },
 
     /**
@@ -40,7 +23,11 @@ const MessageModel = {
      * @param {String} topic
      */
     getFromTopic: async (topic) => {
-        return await Message.find({ topic: topic });
+        return await prisma.message.findMany({
+            where: {
+                topic: topic,
+            },
+        });
     },
 
     /**
@@ -48,7 +35,11 @@ const MessageModel = {
      * @param {String} id 
      */
     delete: async (id) => {
-        await Message.deleteOne(id);
+        await prisma.message.delete({
+            where: {
+                id: id,
+            },
+        });
     },
 };
 

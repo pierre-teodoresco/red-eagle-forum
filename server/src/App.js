@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
-import mongoose from 'mongoose';
 import cors from 'cors';
 import session from 'express-session';
 
@@ -32,18 +31,6 @@ app.use(express.json());
 
 // CORS
 app.use(cors({ origin: process.env.FRONT_URL })); // Only accept requests from the front-end
-
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
-
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});
 
 /* Routes */
 app.use('/user', userRouter);
