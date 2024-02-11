@@ -5,7 +5,6 @@ import Service from '../services/service.js';
 export default {
     findAll: async (req, res) => {
         try {
-            console.log(req.params.label);
             const topic = req.params.label;
             const messages = await Message.getFromTopic(topic);
             res.status(200).json({ message: 'Messages found successfully', messages });
