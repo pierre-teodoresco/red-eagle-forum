@@ -53,7 +53,7 @@ export default {
         async getAllTopics() {
             try {
                 // Get all topics
-                const response = await fetch('/topic', {
+                const response = await fetch('/api/topic', {
                     method: 'GET',
                 });
 

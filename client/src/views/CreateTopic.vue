@@ -102,7 +102,7 @@ export default {
         async createTopic() {
             try {
                 // Send a request to the server to create a new topic
-                const response = await fetch('/topic', {
+                const response = await fetch('/api/topic', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
