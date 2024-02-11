@@ -1,54 +1,47 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../views/Home.vue';
-import Register from '../views/Register.vue';
-import Login from '../views/Login.vue';
-import Profile from '../views/Profile.vue';
-import CreateTopic from '../views/CreateTopic.vue';
-import Topic from '../views/Topic.vue';
-import PageNotFound from '../views/PageNotFound.vue';
 
 const routes = [
     {
         path: '/',
         name: 'Home',
-        component: Home,
+        component: import('../views/Home.vue'),
     },
     {
         path: '/register',
         name: 'Register',
-        component: Register,
+        component: import('../views/Register.vue'),
     },
     {
         path: '/login',
         name: 'Login',
-        component: Login,
+        component: import('../views/Login.vue'),
     },
     {
         path: '/profile/:username',
         name: 'Profile',
-        component: Profile,
+        component: import('../views/Profile.vue'),
     },
     {
         path:'/create-topic',
         name:'CreateTopic',
-        component: CreateTopic,
+        component: import('../views/CreateTopic.vue'),
     },
     {
         path:'/feed/:label',
         name:'Topic',
-        component: Topic,
+        component: import('../views/Topic.vue'),
     },
     {
         path: '/:catchAll(.*)',
-        component: PageNotFound
+        component: import('../views/PageNotFound.vue'),
     },
 ];
 
 const router = createRouter({
     history: createWebHistory(),
-    routes,
     base: '/',
+    routes,
 });
 
 export default router;

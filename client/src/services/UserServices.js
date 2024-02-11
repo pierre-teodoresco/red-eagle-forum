@@ -11,7 +11,7 @@ export default {
      */
     async isLoggedIn() {
         // Check if the user is already logged in
-        const response = await fetch('/user/check-login', {
+        const response = await fetch('/api/user/check-login', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ export default {
             return { isRemembered: false };
         }
         
-        const response = await fetch(`/user/check-remember-me?token=${rememberMeToken}`, {
+        const response = await fetch(`/api/user/check-remember-me?token=${rememberMeToken}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

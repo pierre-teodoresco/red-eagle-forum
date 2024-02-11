@@ -6,9 +6,7 @@ export default defineConfig({
     plugins: [vue()],
     server: {
         proxy: {
-            '/user': 'http://localhost:3000',
-            '/topic': 'http://localhost:3000',
-            '/message': 'http://localhost:3000',
+            '/api': 'http://localhost:3000',
         },
     },
 })

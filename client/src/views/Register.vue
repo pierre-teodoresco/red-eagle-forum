@@ -79,7 +79,7 @@ export default {
             const password = this.password.trim();
             try {
                 // Send the POST request with username and password to the backend
-                const response = await fetch('/user/register', {
+                const response = await fetch('/api/user/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

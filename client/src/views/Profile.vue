@@ -95,7 +95,7 @@ export default {
             const user = this.user;
             try {
                 // Send a request to the server to update the user's information
-                const response = await fetch(`/user/update/${user.username}`, {
+                const response = await fetch(`/api/user/update/${user.username}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

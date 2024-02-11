@@ -74,7 +74,7 @@ export default {
 
         // Get the topic from the server
         try {
-            const response = await fetch(`/topic/${topicLabel}`, {
+            const response = await fetch(`/api/topic/${topicLabel}`, {
                 method: 'GET',
             });
 
@@ -95,7 +95,7 @@ export default {
         async getMessages() {
             // Get the messages from the server
             try {
-                const response = await fetch(`/message/${this.topic.label}`, {
+                const response = await fetch(`/api/message/${this.topic.label}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application.json',
@@ -117,7 +117,7 @@ export default {
         async postMessage() {
             try {
                 // Send the message to the server
-                const response = await fetch('/message', {
+                const response = await fetch('/api/message', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
