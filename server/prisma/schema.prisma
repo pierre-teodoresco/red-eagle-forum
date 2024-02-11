@@ -17,8 +17,6 @@ model User {
     email     String   @unique
     name      String?
     surname   String?
-    messages  Message[]
-    topics    Topic[]
 }
 
 model Message {
@@ -27,7 +25,6 @@ model Message {
     content       String?
     creationDate  DateTime @default(now())
     creationUser  String
-    user          User     @relation(fields: [creationUser], references: [username])
 }
 
 model Topic {
@@ -36,5 +33,4 @@ model Topic {
     description   String
     creationDate  DateTime @default(now())
     creationUser  String
-    user          User     @relation(fields: [creationUser], references: [username])
 }

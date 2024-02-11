@@ -49,7 +49,7 @@ const TopicModel = {
      * @returns {string || null} depending on whether the topic is found or not
      */
     findOne: async (label) => {
-        return await prisma.topic.findUnique({
+        return await prisma.topic.findUnique({ 
             where: { label },
         });
     },

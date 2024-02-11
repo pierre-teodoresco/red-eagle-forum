@@ -9,7 +9,7 @@ export default {
      * @param {JSON} user 
      */
     insert: async (user) => {
-        const newUser = await prisma.user.create({
+        await prisma.user.create({
             data: {
                 username: user.username,
                 email: user.email,

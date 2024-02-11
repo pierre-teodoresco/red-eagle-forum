@@ -39,7 +39,7 @@ const userController = {
     login: async (req, res) => {
         try {
             // Get user from database
-            const user = await User.getByUsername(req.body.username).then(Service.prismaEnd).catch(Service.prismaErrorHandler);
+            const user = await User.getByUsername(req.body.username);
 
             // Check if user exists and password is correct
             if (!user || !(await Service.comparePassword(user.password, req.body.password))) {
@@ -47,8 +47,7 @@ const userController = {
                 res.status(401).json({ error: 'Invalid credentials' });
             } 
 
-            // We use toObject() because user is a mongoose object
-            req.session.user = Service.createSession(user.toObject());
+            req.session.user = Service.createSession(user);
 
             if (req.body.rememberMe) {
                 const payload = { username: user.username };
@@ -100,7 +99,7 @@ const userController = {
             }
 
             // Create a new session with the updated user
-            const updatedUser = await User.update(req.params.username, req.body).then(Service.prismaEnd).catch(Service.prismaErrorHandler);
+            const updatedUser = await User.update(req.params.username, req.body);
             req.session.user = Service.createSession(updatedUser);
             res.status(200).json({ message: 'User updated successfully', user: updatedUser });
         } catch (error) {
@@ -115,7 +114,7 @@ const userController = {
         try {
             const token = req.query.token;
             const payload = jwt.verify(token, process.env.JWT_SECRET);
-            const user = await User.getByUsername(payload.username).then(Service.prismaEnd).catch(Service.prismaErrorHandler);
+            const user = await User.getByUsername(payload.username);
 
             if (!user) {
                 res.status(401).json({ error: 'Invalid token' });

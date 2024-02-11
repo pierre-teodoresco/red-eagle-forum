@@ -7,7 +7,7 @@ export default {
         try {
             console.log(req.params.label);
             const topic = req.params.label;
-            const messages = await Message.getFromTopic(topic).then(Service.prismaEnd).catch(Service.prismaErrorHandler);
+            const messages = await Message.getFromTopic(topic);
             res.status(200).json({ message: 'Messages found successfully', messages });
         } catch (error) {
             console.error(error);

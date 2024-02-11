@@ -14,8 +14,7 @@ CREATE TABLE "Message" (
     "topic" TEXT NOT NULL,
     "content" TEXT,
     "creationDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "creationUser" TEXT NOT NULL,
-    CONSTRAINT "Message_creationUser_fkey" FOREIGN KEY ("creationUser") REFERENCES "User" ("username") ON DELETE RESTRICT ON UPDATE CASCADE
+    "creationUser" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -24,8 +23,7 @@ CREATE TABLE "Topic" (
     "label" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "creationDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "creationUser" TEXT NOT NULL,
-    CONSTRAINT "Topic_creationUser_fkey" FOREIGN KEY ("creationUser") REFERENCES "User" ("username") ON DELETE RESTRICT ON UPDATE CASCADE
+    "creationUser" TEXT NOT NULL
 );
 
 -- CreateIndex
