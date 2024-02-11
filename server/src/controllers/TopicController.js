@@ -23,7 +23,7 @@ const topicController = {
             if (error.code === 'P2002') {
                 // Si le sujet existe déjà, renvoyez une erreur 400 Bad Request
                 // le code P2002 signifie qu'il y a une violation de contrainte d'unicité
-                return res.status(400).json({ error: 'Topic with this label already exists' });
+                return res.status(400).json({ error: 'A topic with this label already exists' });
             } else {
                 console.error(error);
                 res.status(500).json({ error: 'Internal Server Error' });

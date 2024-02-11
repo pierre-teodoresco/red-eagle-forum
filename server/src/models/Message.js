@@ -24,9 +24,7 @@ const MessageModel = {
      */
     getFromTopic: async (topic) => {
         return await prisma.message.findMany({
-            where: {
-                topic: topic,
-            },
+            where: { topic },
         });
     },
 
@@ -36,9 +34,7 @@ const MessageModel = {
      */
     delete: async (id) => {
         await prisma.message.delete({
-            where: {
-                id: id,
-            },
+            where: { id },
         });
     },
 };

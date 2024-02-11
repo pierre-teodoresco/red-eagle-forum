@@ -20,17 +20,21 @@ const userController = {
                 email: req.body.email,
                 password: hashedPassword,
             };
-            await User.insert(user)
-                .then(Service.prismaEnd)
-                .catch(Service.prismaErrorHandler);
+            await User.insert(user);
 
             // Create a session for the user (log them in)
             req.session.user = Service.createSession(user);
 
             res.status(200).json({ message: 'User added successfully' });
         } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: 'Internal Server Error' });
+            if (error.code === 'P2002') {
+                // If the user already exists, send a 400 Bad Request error
+                // P2002 means there is a uniqueness constraint violation
+                res.status(400).json({ error: 'Username already taken' });
+            } else {
+                console.error(error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
         }
     },
     /**

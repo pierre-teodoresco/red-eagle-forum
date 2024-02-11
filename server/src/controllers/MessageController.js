@@ -17,9 +17,7 @@ export default {
         try {
             const message = req.body;
             message.creationDate = new Date();
-            await Message.insert(message)
-                .then(Service.prismaEnd)
-                .catch(Service.prismaErrorHandler);
+            await Message.insert(message);
                 
             res.status(200).json({ message: 'Message created successfully' });
         } catch (error) {
